@@ -149,7 +149,8 @@ function drawHelp(nvis) {    // drawing on canvas
   dT("drawHelp(8)", 4);
   ctx.fillStyle = "blue";
   s= "Please select your link details."; ctx.fillText(s,1, y+=30);
-  s= "Signal and noise will be estimated."; ctx.fillText(s,1, y+=30);
+  s= "Signal and noise will be estimated for SSB mode."; ctx.fillText(s,1, y+=30);
+  s= "Minimum SNR is 5dB for data, and 10dB for voice."; ctx.fillText(s,1, y+=30);
   s= "Code will calculate 3 optimal freq to use."; ctx.fillText(s,1, y+=30);
   dT("drawHelp(10)", 4);
   ctx.fillStyle = "green";
