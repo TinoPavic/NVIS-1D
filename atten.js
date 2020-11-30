@@ -44,9 +44,8 @@ function calcFSPL(nvis) {   // FSPL
   return (20 * Math.log10(nvis.pathdist * nvis.freq) + 32.44); 
 }
 function calcDrap(nvis) {    // predicting DRAP at 2.2 MHz
-  var ls = sunLat(nvis) - nvis.lat;
-  var ld = Math.cos(ls*3.1414/180);  
-  var ld2 =30 + 25*ld; 
+  var ls = sunLat(nvis) - nvis.lat; // sun angle from normal at noon
+  var ld = Math.cos(ls*3.1414/180);  var ld2 =30 + 25*ld; 
   var a = nvis.pathdist / (2*nvis.hF2); 
   var ld3 = ld2*a;
   console.log("calcDrap(1) ls="+ls+ ", ld="+ld +", ld2="+ld2);
@@ -95,11 +94,11 @@ function canvasUpdate1(nvis) {    // drawing on canvas
   s= "SnrN = signal/noise night (dBm)"; ctx.fillText(s,1, y+=30);
   s= "f      Li     Ld    Lt      N    SnrD SnrN"; ctx.fillText(s,1, y+=50);
   ctx.fillStyle= "black";
-  for ( i=0; i<10; i++) {
+  for ( i=0; i<13; i++) {
     dT("canvasUpdate(22) i="+i, 3);
       nvisCheck(nvis);
       y += 30;    
-      nvis.freq= i + 2.0; 
+      nvis.freq= i + 2; 
       ctx.fillStyle="black";
       if(nvis.freq > nvis.muf3) ctx.fillStyle="red";
       s = Math.round(nvis.freq);  ctx.fillText(s, 1, y);   
@@ -112,7 +111,7 @@ function canvasUpdate1(nvis) {    // drawing on canvas
       s=Math.round(ld);      ctx.fillText(s, 140, y);
       s=Math.round(li+ld);   ctx.fillText(s, 210, y);
       n = calcNoise(nvis);   
-      s=Math.round(ld);     ctx.fillText(s, 300, y);
+      s=Math.round(n);     ctx.fillText(s, 300, y);
       s=Math.round(nvis.eirp-li-ld-n); ctx.fillText(s, 390, y);
       if(nvis.freq > nvis.muf1) ctx.fillStyle="red";
       s=Math.round(nvis.eirp-li-10-n); ctx.fillText(s, 480, y);   
