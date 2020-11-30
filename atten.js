@@ -94,7 +94,7 @@ function canvasUpdate1(nvis) {    // drawing on canvas
   s= "SnrN = signal/noise night (dBm)"; ctx.fillText(s,1, y+=30);
   s= "f      Li     Ld    Lt      N    SnrD SnrN"; ctx.fillText(s,1, y+=50);
   ctx.fillStyle= "black";
-  for ( i=0; i<13; i++) {
+  for ( i=0; i<15; i++) {
     dT("canvasUpdate(22) i="+i, 3);
       nvisCheck(nvis);
       y += 30;    

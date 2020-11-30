@@ -5,6 +5,8 @@ function antennaGain(nvis) {
   if(nvis.antenna == 3) g=antennaAsF104(nvis);
   if(nvis.antenna == 4) g=antennaRf1944(nvis);
   if(nvis.antenna == 5) g=antennaMil2(nvis);
+  if(nvis.antenna == 6) g=antennaWhpBnt(nvis);
+  if(nvis.antenna == 7) g=antennaWhp15(nvis);
   console.log("antennaGain() ant="+nvis.antenna+", fr="+nvis.freq+", g="+g);
   return g;
 }
@@ -117,6 +119,85 @@ function antennaMil2(nvis) {
  if(fr<12.1)  return -15;
  return -13;          
 }
+
+function antennaWhpBnt(nvis) {
+  var g, fr=nvis.freq;
+  g=-7; if(nvis.elev<78) g=-6;   if(nvis.elev<63) g=-4;   if(nvis.elev<48) g=-3; 
+  if(nvis.elev<33) g=-2;  if(nvis.elev<18) g=-3; 
+  if(fr<11){
+    g=-9; if(nvis.elev<78) g=-7;   if(nvis.elev<63) g=-5;   if(nvis.elev<48) g=-3; 
+    if(nvis.elev<33) g=-3;  if(nvis.elev<18) g=-4;
+  }
+  if(fr<9){
+    g=-11; if(nvis.elev<78) g=-9;   if(nvis.elev<63) g=-7;   if(nvis.elev<48) g=-5; 
+    if(nvis.elev<33) g=-5;  if(nvis.elev<18) g=-6;
+  }
+  if(fr<7.5){
+    g=-13; if(nvis.elev<78) g=-10;   if(nvis.elev<63) g=-8;   if(nvis.elev<48) g=-7; 
+    if(nvis.elev<33) g=-6;  if(nvis.elev<18) g=-7;
+  }
+  if(fr<6.5){
+    g=-15; if(nvis.elev<78) g=-12;   if(nvis.elev<63) g=-10;   if(nvis.elev<48) g=-8; 
+    if(nvis.elev<33) g=-7;  if(nvis.elev<18) g=-9;
+  }
+  if(fr<5.5){
+    g=-18; if(nvis.elev<78) g=-15;   if(nvis.elev<63) g=-12;   if(nvis.elev<48) g=-10; 
+    if(nvis.elev<33) g=-9;  if(nvis.elev<18) g=-11;
+  }
+  if(fr<4.5){
+    g=-21; if(nvis.elev<78) g=-18;   if(nvis.elev<63) g=-15;   if(nvis.elev<48) g=-13; 
+    if(nvis.elev<33) g=-12;  if(nvis.elev<18) g=-13;
+  }
+  if(fr<3.5){
+    g=-24; if(nvis.elev<78) g=-21;   if(nvis.elev<63) g=-18;   if(nvis.elev<48) g=-16; 
+    if(nvis.elev<33) g=-15;  if(nvis.elev<18) g=-16;
+  }
+  if(fr<2.5){
+    g=-28; if(nvis.elev<78) g=-25;   if(nvis.elev<63) g=-23;   if(nvis.elev<48) g=-21; 
+    if(nvis.elev<33) g=-20;  if(nvis.elev<18) g=-21;
+  }
+  return g;
+}
+function antennaWhp15(nvis) {
+    var g, fr=nvis.freq;
+    g=-11; if(nvis.elev<78) g=-8;   if(nvis.elev<63) g=-5;   if(nvis.elev<48) g=-2; 
+    if(nvis.elev<33) g=-0;  if(nvis.elev<18) g=-1; 
+    if(fr<11){
+      g=-12; if(nvis.elev<78) g=-8;   if(nvis.elev<63) g=-5;   if(nvis.elev<48) g=-2; 
+      if(nvis.elev<33) g=-0;  if(nvis.elev<18) g=-1;
+    }
+    if(fr<9){
+      g=-15; if(nvis.elev<78) g=-10;   if(nvis.elev<63) g=-6;   if(nvis.elev<48) g=-3; 
+      if(nvis.elev<33) g=-2;  if(nvis.elev<18) g=-3;
+    }
+    if(fr<7.5){
+      g=-16; if(nvis.elev<78) g=-10;   if(nvis.elev<63) g=-6;   if(nvis.elev<48) g=-4; 
+      if(nvis.elev<33) g=-2;  if(nvis.elev<18) g=-3;
+    }
+    if(fr<6.5){
+      g=-17; if(nvis.elev<78) g=-10;   if(nvis.elev<63) g=-6;   if(nvis.elev<48) g=-4; 
+      if(nvis.elev<33) g=-2;  if(nvis.elev<18) g=-3.6;
+    }
+    if(fr<5.5){
+      g=-19; if(nvis.elev<78) g=-12;   if(nvis.elev<63) g=-7;   if(nvis.elev<48) g=-5; 
+      if(nvis.elev<33) g=-4;  if(nvis.elev<18) g=-5;
+    }
+    if(fr<4.5){
+      g=-22; if(nvis.elev<78) g=-13;   if(nvis.elev<63) g=-9;   if(nvis.elev<48) g=-7; 
+      if(nvis.elev<33) g=-6;  if(nvis.elev<18) g=-5;
+    }
+    if(fr<3.5){
+      g=-26; if(nvis.elev<78) g=-16;   if(nvis.elev<63) g=-12;   if(nvis.elev<48) g=-9; 
+      if(nvis.elev<33) g=-8;  if(nvis.elev<18) g=-9;
+    }
+    if(fr<2.5){
+      g=-31; if(nvis.elev<78) g=-21;   if(nvis.elev<63) g=-16;   if(nvis.elev<48) g=-14; 
+      if(nvis.elev<33) g=-12;  if(nvis.elev<18) g=-13;
+    }
+    return g;
+  }
+  
+   
 
 
 
