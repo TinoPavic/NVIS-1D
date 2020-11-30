@@ -76,7 +76,7 @@ function canvasUpdate1(nvis) {    // drawing on canvas
   nvisCheck(nvis);
   var canvas = document.getElementById("myCanvas");  // find canvas element
   var ctx = canvas.getContext("2d");      // get drawing object
-  ctx.clearRect(0, 0, 600, 800);
+  ctx.clearRect(0, 0, 800, 1100);
   ctx.fillStyle = "#FF0000";      // set fill style to red color
   ctx.font = "35px Arial";        // draw text
   var i, y=0, s, li, ld, n;
@@ -94,7 +94,7 @@ function canvasUpdate1(nvis) {    // drawing on canvas
   s= "SnrN = signal/noise night (dBm)"; ctx.fillText(s,1, y+=30);
   s= "f      Li     Ld    Lt      N    SnrD SnrN"; ctx.fillText(s,1, y+=50);
   ctx.fillStyle= "black";
-  for ( i=0; i<15; i++) {
+  for ( i=0; i<24; i++) {
     dT("canvasUpdate(22) i="+i, 3);
       nvisCheck(nvis);
       y += 30;    
@@ -124,7 +124,7 @@ function drawHelp(nvis) {    // drawing on canvas
   var canvas = document.getElementById("myCanvas");  // find canvas element
   var ctx = canvas.getContext("2d");      // get drawing object
   dT("drawHelp(2)", 4);
-  ctx.clearRect(0, 0, 600, 800);
+  ctx.clearRect(0, 0, 800, 1100);
   ctx.fillStyle = "black";      // set fill style to red color
   ctx.font = "25px Arial";        // draw text
   dT("drawHelp(4)", 4);
