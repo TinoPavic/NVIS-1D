@@ -4,10 +4,12 @@ class myNvis {
         this.year = 2020;   this.month = 11; 
         this.lat=-38;       this.lon=-144;    
         this.month=11;      this.year=2020;   
-        this.distance=100;  this.gain=6;    this.power=52;  
-        this.location=0;    this.storm=0;    this.eirp = 64;  
+        this.distance=100;  this.gain=6;     this.gain2=6;    
+        this.power=52;      this.eirp = 64;
+        this.location=0;    this.storm=0;      
         this.hF2 = 300.0;   this.elev=90;    this.freq=2.2;
-        this.mast=12;       this.antenna=1; //dipole at 12 m
+        this.mast=12;       this.antenna=1;    //tx dipole at 12 m
+        this.mast2=12;      this.antenna2=1;   //rx dipole at 12 m
         this.cycleCoe=1.0;  this.seasonCoe=1.0; this.latCoe=1.0; // Correction factors 
         this.fc1=2.3;  this.fc2=4.0;  this.fc3=5.0;   // foF2 (night, day, noon)
         this.muf1=2.5; this.muf2=4.1; this.muf3=5.1;  // MUF (night, day, noon)

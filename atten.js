@@ -15,6 +15,8 @@ function selUpdate(nvis) {    // selection has changed
   sel=document.getElementById("year").value;  nvis.year=parseInt(sel);
   sel=document.getElementById("mast").value; nvis.mast=parseFloat(sel);
   sel=document.getElementById("antenna").value; nvis.antenna=parseInt(sel);
+  sel=document.getElementById("mast2").value; nvis.mast2=parseFloat(sel);
+  sel=document.getElementById("antenna2").value; nvis.antenna2=parseInt(sel);
   sel=document.getElementById("power").value; nvis.power=parseInt(sel);
   sel=document.getElementById("dist").value;  nvis.distance=parseFloat(sel);
   sel=document.getElementById("loc").value;   nvis.location=parseInt(sel);
@@ -76,7 +78,7 @@ function canvasUpdate1(nvis) {    // drawing on canvas
   nvisCheck(nvis);
   var canvas = document.getElementById("myCanvas");  // find canvas element
   var ctx = canvas.getContext("2d");      // get drawing object
-  ctx.clearRect(0, 0, 800, 1100);
+  ctx.clearRect(0, 0, 900, 1100);
   ctx.fillStyle = "#FF0000";      // set fill style to red color
   ctx.font = "35px Arial";        // draw text
   var i, y=0, s, li, ld, n;
@@ -86,15 +88,16 @@ function canvasUpdate1(nvis) {    // drawing on canvas
   s=showMuf(nvis);  
   ctx.fillText(s,1, y+=30);
   s= "f = frequency (MHz)"; ctx.fillText(s,1, y+=30);
+  s= "Eirp = effective isotropic radiated power (dBm)"; ctx.fillText(s,1, y+=30);
   s= "Li = isotropic FSPL (dB)"; ctx.fillText(s,1, y+=30);
   s= "Ld = D region loss (dB)"; ctx.fillText(s,1, y+=30);
   s= "Lt = Li + Ld"; ctx.fillText(s,1, y+=30);
   s= "N = noise received (dBm)"; ctx.fillText(s,1, y+=30);
   s= "SnrD = signal/noise day (dBm)"; ctx.fillText(s,1, y+=30);
   s= "SnrN = signal/noise night (dBm)"; ctx.fillText(s,1, y+=30);
-  s= "f      Li     Ld    Lt      N    SnrD SnrN"; ctx.fillText(s,1, y+=50);
+  s= "f       Eirp    Li       Ld      Lt        N      SnrD  SnrN"; ctx.fillText(s,1, y+=50);
   ctx.fillStyle= "black";
-  for ( i=0; i<24; i++) {
+  for ( i=0; i<23; i++) {
     dT("canvasUpdate(22) i="+i, 3);
       nvisCheck(nvis);
       y += 30;    
@@ -102,62 +105,23 @@ function canvasUpdate1(nvis) {    // drawing on canvas
       ctx.fillStyle="black";
       if(nvis.freq > nvis.muf3) ctx.fillStyle="red";
       s = Math.round(nvis.freq);  ctx.fillText(s, 1, y);   
-      s= antennaGain(nvis);  
-      nvis.eirp= nvis.power + (2*s);
+      antennaGain(nvis);  
+      nvis.eirp= nvis.power + nvis.gain; 
+      s=Math.round(nvis.eirp);     ctx.fillText(s, 75, y);
       li= calcFSPL(nvis);    
-      s=Math.round(li);     ctx.fillText(s, 60, y);
+      s=Math.round(li);     ctx.fillText(s, 175, y);
       ld= calcDrap(nvis);    
       ld*=2.2/nvis.freq; 
-      s=Math.round(ld);      ctx.fillText(s, 140, y);
-      s=Math.round(li+ld);   ctx.fillText(s, 210, y);
+      s=Math.round(ld);      ctx.fillText(s, 280, y);
+      s=Math.round(li+ld);   ctx.fillText(s, 370, y);
       n = calcNoise(nvis);   
-      s=Math.round(n);     ctx.fillText(s, 300, y);
-      s=Math.round(nvis.eirp-li-ld-n); ctx.fillText(s, 390, y);
+      s=Math.round(n);     ctx.fillText(s, 460, y);
+      s=Math.round(nvis.eirp+nvis.gain2-li-ld-n); ctx.fillText(s, 570, y);
       if(nvis.freq > nvis.muf1) ctx.fillStyle="red";
-      s=Math.round(nvis.eirp-li-10-n); ctx.fillText(s, 480, y);   
+      s=Math.round(nvis.eirp+nvis.gain2-li-10-n); ctx.fillText(s, 680, y);   
   }  
 }
 
-function drawHelp(nvis) {    // drawing on canvas
-  console.log("selHelp(1)"); nvisCheck(nvis);
-  dT("drawHelp1", 4);
-  var canvas = document.getElementById("myCanvas");  // find canvas element
-  var ctx = canvas.getContext("2d");      // get drawing object
-  dT("drawHelp(2)", 4);
-  ctx.clearRect(0, 0, 800, 1100);
-  ctx.fillStyle = "black";      // set fill style to red color
-  ctx.font = "25px Arial";        // draw text
-  dT("drawHelp(4)", 4);
-  var s, y=0;
-  s="LOS has short range, most often 5-10 km."; ctx.fillText(s,1, y+=30);
-  s="Only NVIS covers distances from LOS to 600 km."; ctx.fillText(s,1, y+=30);
-  s= "NVIS works over any terrain type, all the time."; ctx.fillText(s,1, y+=30);
-  s= "NVIS wave bounces from Ionosphere at angles"; ctx.fillText(s,1, y+=30);
-  s= "close to vertical, but only if freq is under foF2."; ctx.fillText(s,1, y+=30);
-  s= "Ionospere changes all the time, and foF2 changes."; ctx.fillText(s,1, y+=30);
-  ctx.fillStyle = "red";   
-  dT("drawHelp(6)", 4);
-  s= "Optimal freq is just under foF2."; ctx.fillText(s,1, y+=30);
-  s= "Freq over foF2 causes \"skip zone\" - no coverage."; ctx.fillText(s,1, y+=30);
-  s= "Link on any single freq will fail."; ctx.fillText(s,1, y+=30);
-  ctx.fillStyle = "black";   
-  s= "foF2 is the lowest at Sun cycle low (2020)."; ctx.fillText(s,1, y+=30);
-  s= "foF2 is the highest at Sun cycle high (2025)."; ctx.fillText(s,1, y+=30);
-  s= "foF2 is higher at low lattitudes."; ctx.fillText(s,1, y+=30);
-  s= "foF2 is lower during night."; ctx.fillText(s,1, y+=30);
-  dT("drawHelp(8)", 4);
-  ctx.fillStyle = "blue";
-  s= "Please select your link details."; ctx.fillText(s,1, y+=30);
-  s= "Signal and noise will be estimated for SSB mode."; ctx.fillText(s,1, y+=30);
-  s= "Minimum SNR is 5dB for data, and 10dB for voice."; ctx.fillText(s,1, y+=30);
-  s= "Code will calculate 3 optimal freq to use."; ctx.fillText(s,1, y+=30);
-  dT("drawHelp(10)", 4);
-  ctx.fillStyle = "green";
-  s= "Night freq f1 is mostly 2 to 4 MHz."; ctx.fillText(s,1, y+=30);
-  s= "Day freq f2 is mostly 4 to 8 MHz."; ctx.fillText(s,1, y+=30);
-  s= "Freq f3 is for midday and extended range."; ctx.fillText(s,1, y+=30);
-  dT("drawHelp(20)", 4);
-}
 
  
 
