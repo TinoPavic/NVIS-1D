@@ -102,7 +102,7 @@ function antennaCasgA1(fr, h, e) {  // Frequency and mast height matter
   return g;
 }
 
-function antennaRf1944(fr, h, e) {  // only frequency matters
+function antennaRf1944(fr, h, e) {  
  var g = antennaCasgA1(fr, h, e); 
  var d=22.5; 
  if(fr<2.6)   d=20;  if(fr<3.1)   d=18;
@@ -114,7 +114,7 @@ function antennaRf1944(fr, h, e) {  // only frequency matters
  return (g-d);   
 }
 
-function antennaMil2(fr, h, e) {  // only frequency matters 
+function antennaMil2(fr, h, e) {   
  if(fr<2.1)  return -27;
  if(fr<2.6)  return -16;
  if(fr<3.1)  return -9.1;
@@ -160,7 +160,7 @@ function antennaWhpBnt(fr, h, e) {  // only frequency matters
   }
   if(fr<3.5){
     g=-24; if(e<78) g=-21;   if(e<63) g=-18;   if(e<48) g=-16; 
-    if(e<33) g=-15;  if(ev<18) g=-16;
+    if(e<33) g=-15;  if(e<18) g=-16;
   }
   if(fr<2.5){
     g=-28; if(e<78) g=-25;   if(e<63) g=-23;   if(e<48) g=-21; 
