@@ -8,6 +8,7 @@ function antennaGain(nvis) {
   if(a == 5) g=antennaMil2(fr, h, e);
   if(a == 6) g=antennaWhpBnt(fr, h, e);
   if(a == 7) g=antennaWhp15(fr, h, e);
+  if(a == 8) g=antennaHf230(fr, h, e);
   nvis.gain=g;
   console.log(s+"Tx a="+a+", fr="+fr+", h="+h+",g="+g);
   a=nvis.antenna2; h=nvis.mast2;
@@ -18,6 +19,7 @@ function antennaGain(nvis) {
   if(a == 5) g=antennaMil2(fr, h, e);
   if(a == 6) g=antennaWhpBnt(fr, h, e);
   if(a == 7) g=antennaWhp15(fr, h, e);
+  if(a == 8) g=antennaHf230(fr, h, e);
   nvis.gain2=g;
   console.log(s+"Rx a="+a+", fr="+fr+", h="+h+",g="+g);
   return g;
@@ -32,6 +34,18 @@ function antennaAsF104(fr, h, e) {  // Frequency and mast height matter
   var g= antennaCasgA1(fr, h, e);  
   return (g-1.5);      
 }
+function antennaHf230(fr, h, e) {  // Frequency and mast height matter
+  var g= antennaCasgA1(fr, 5, e);  // Centre Heigth is 3.3 m
+  if(fr<2.2) return (g-25); 
+  if(fr<3.3) return (g-21); 
+  if(fr<4.3) return (g-19); 
+  if(fr<5.3) return (g-18);  
+  if(fr<6.3) return (g-15);  
+  if(fr<7.3) return (g-14); 
+  if(fr<8.3) return (g-13);   
+  return(g-11);   
+}
+
 
 function antennaCasgA1(fr, h, e) {  // Frequency and mast height matter
   var h= h * fr / 300.0;
