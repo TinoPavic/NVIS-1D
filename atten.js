@@ -97,14 +97,18 @@ function canvasUpdate1(nvis) {    // drawing on canvas
   s= "SnrN = signal/noise night (dBm)"; ctx.fillText(s,1, y+=30);
   s= "f       Eirp    Li       Ld      Lt        N      SnrD  SnrN"; ctx.fillText(s,1, y+=50);
   ctx.fillStyle= "black";
+  nvis.freq=1.5;
   for ( i=0; i<23; i++) {
     dT("canvasUpdate(22) i="+i, 3);
       nvisCheck(nvis);
       y += 30;    
-      nvis.freq= i + 2; 
+      nvis.freq += 0.5; 
+      if(i>10) nvis.freq+=0.5;
       ctx.fillStyle="black";
       if(nvis.freq > nvis.muf3) ctx.fillStyle="red";
-      s = Math.round(nvis.freq);  ctx.fillText(s, 1, y);   
+      s = nvis.freq.toFixed(1);  
+      if(nvis.freq>9.5) s=Math.round(nvis.freq);
+      ctx.fillText(s, 1, y);     
       antennaGain(nvis);  
       nvis.eirp= nvis.power + nvis.gain; 
       s=Math.round(nvis.eirp);     ctx.fillText(s, 75, y);

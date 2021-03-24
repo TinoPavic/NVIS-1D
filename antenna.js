@@ -34,18 +34,6 @@ function antennaAsF104(fr, h, e) {  // Frequency and mast height matter
   var g= antennaCasgA1(fr, h, e);  
   return (g-1.5);      
 }
-function antennaHf230(fr, h, e) {  // Frequency and mast height matter
-  var g= antennaCasgA1(fr, 5, e);  // Centre Heigth is 3.3 m
-  if(fr<2.2) return (g-25); 
-  if(fr<3.3) return (g-21); 
-  if(fr<4.3) return (g-19); 
-  if(fr<5.3) return (g-18);  
-  if(fr<6.3) return (g-15);  
-  if(fr<7.3) return (g-14); 
-  if(fr<8.3) return (g-13);   
-  return(g-11);   
-}
-
 
 function antennaCasgA1(fr, h, e) {  // Frequency and mast height matter
   var h= h * fr / 300.0;
@@ -220,6 +208,64 @@ function antennaWhp15(fr, h, e) { // only frequency matters
     }
     return g;
   }
+  function antennaHf230(fr, h, e) {  // assumed on PMV
+    var g;
+    g=-23.8; if(e<45) g=-25;   if(e<23) g=-27.3; // fr=2   
+    if(fr>2.15){
+      g=-21.5; if(e<38) g=-23;   if(e<22) g=-24.9;    
+    }
+    if(fr>2.75){
+      g=-17.6; if(e<38) g=-18.6;   if(e<22) g=-20.5;    
+    }
+    if(fr>3.25){
+      g=-15; if(e<38) g=-15.8;   if(e<22) g=-17.6;    
+    }
+    if(fr>3.75){
+      g=-13.2; if(e<38) g=-13.8;   if(e<22) g=-15.6;    
+    }
+    if(fr>4.5){
+      g=-10.5; if(e<38) g=-10.6;   if(e<22) g=-12.5;    
+    }
+    if(fr>5.5){
+      g=-8.6; if(e<38) g=-8.2;   if(e<22) g=-10;    
+    }
+    if(fr>6.5){
+      g=-7.3; if(e<53) g=-6;   if(e<22) g=-8;    
+    }
+    if(fr>7.5){
+      g=-6.3; if(e<53) g=-4.4;   if(e<22) g=-6.2;    
+    }
+    if(fr>8.5){
+      g=-5.2; if(e<70) g=-3.5;   if(e<22) g=-4.4;    
+    }
+    if(fr>9.5){
+      g=-3.2; if(e<68) g=-1.4;   if(e<22) g=-2.4;    
+    }
+    if(fr>10.5){
+      g=-1.9; if(e<68) g=-0.4;   if(e<22) g=-1.6;    
+    }
+    if(fr>11.5){
+      g=-0.9; if(e<68) g=-0.3;   if(e<22) g=-1.3;    
+    }
+    if(fr>13.5){
+      g=0.2; if(e<68) g=1.2;   if(e<22) g=-0.6;    
+    }
+    if(fr>16.5){
+      g=0.2; if(e<68) g=1;   if(e<22) g=-0.2;    
+    }
+    if(fr>19.5){
+      g=0.3; if(e<68) g=1.1;   if(e<22) g=-3.3;    
+    }
+    if(fr>22.5){
+      g=0.8; if(e<68) g=1.6;   if(e<22) g=-2.7;    
+    }
+    if(fr>24.5){
+      g=1.2; if(e<68) g=2;   if(e<22) g=-1.9;    
+    }
+
+    return g;
+  }
+  
   
    
 
