@@ -114,8 +114,9 @@ function canvasUpdate1(nvis) {    // drawing on canvas
       s=Math.round(nvis.eirp);     ctx.fillText(s, 75, y);
       li= calcFSPL(nvis);    
       s=Math.round(li);     ctx.fillText(s, 175, y);
-      ld= calcDrap(nvis);    
-      ld*=2.2/nvis.freq; 
+      ld= calcDrap(nvis);  
+      n = Math.pow(nvis.freq, 1.5);  
+      ld*=2.2/n; 
       s=Math.round(ld);      ctx.fillText(s, 280, y);
       s=Math.round(li+ld);   ctx.fillText(s, 370, y);
       n = calcNoise(nvis);   

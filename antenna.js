@@ -9,6 +9,9 @@ function antennaGain(nvis) {
   if(a == 6) g=antennaWhpBnt(fr, h, e);
   if(a == 7) g=antennaWhp15(fr, h, e);
   if(a == 8) g=antennaHf230(fr, h, e);
+  if(a == 9) g=antennaDipole(fr, h, e)+5;
+  if(a == 10) g=antennaDipole(fr, h, e)+8;
+  if(a == 11) g=antennaDipole(fr, h, e);
   nvis.gain=g;
   console.log(s+"Tx a="+a+", fr="+fr+", h="+h+",g="+g);
   a=nvis.antenna2; h=nvis.mast2;
@@ -20,6 +23,9 @@ function antennaGain(nvis) {
   if(a == 6) g=antennaWhpBnt(fr, h, e);
   if(a == 7) g=antennaWhp15(fr, h, e);
   if(a == 8) g=antennaHf230(fr, h, e);
+  if(a == 9) g=antennaDipole(fr, h, e)+5;
+  if(a == 10) g=antennaDipole(fr, h, e)+8;
+  if(a == 11) g=antennaDipole(fr, h, e);
   nvis.gain2=g;
   console.log(s+"Rx a="+a+", fr="+fr+", h="+h+",g="+g);
   return g;
