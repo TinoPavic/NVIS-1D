@@ -98,12 +98,13 @@ function canvasUpdate1(nvis) {    // drawing on canvas
   s= "f       Eirp    Li       Ld      Lt        N      SnrD  SnrN"; ctx.fillText(s,1, y+=50);
   ctx.fillStyle= "black";
   nvis.freq=1.5;
-  for ( i=0; i<23; i++) {
+  for ( i=0; i<25; i++) {
     dT("canvasUpdate(22) i="+i, 3);
       nvisCheck(nvis);
       y += 30;    
       nvis.freq += 0.5; 
-      if(i>10) nvis.freq+=0.5;
+      if(i>8) nvis.freq+=0.5;
+      if(i>20) nvis.freq+=1;
       ctx.fillStyle="black";
       if(nvis.freq > nvis.muf3) ctx.fillStyle="red";
       s = nvis.freq.toFixed(1);  
