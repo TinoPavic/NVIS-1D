@@ -11,7 +11,7 @@
 </head>
 
 <body>
-<h1 id=str1>NVIS v.1.H</h1>
+<h1 id=str1>SkyWave v.1.I</h1>
 <h1><a href="help.htm">Help Page</a></h1>
 <div class="myDiv">
   <h2 id="str2">State, month, year and distance</h2>
@@ -58,6 +58,8 @@
     <option value=1000>1000 km</option>
     <option value=1200>1200 km</option>
     <option value=1500>1500 km</option>
+    <option value=3000>3000 km</option>
+    <option value=5000>5000 km</option>
   </select>
   <h2 id="str3">Transmiter: mast, antenna and power</h2>
   <select style="font-size: 60px" id="mast" name="mast" onchange="selChange()">
@@ -78,8 +80,12 @@
     <option value=6>WhipBnt</option>
     <option value=7>Whip15'</option>
     <option value=8>HF230L</option>
+    <option value=9>Yagi 3el</option>
+    <option value=10>Yagi 6el</option>
+    <option value=11>VertMono</option>
   </select>
   <select style="font-size: 60px" id="power" name="power" onchange="selChange()">
+    <option value=62 >1500 W</option>
     <option value=56 >400 W</option>
     <option value=52>150 W</option>
     <option value=43 selected>20 W</option>
@@ -106,6 +112,9 @@
     <option value=6>WhipBnt</option>
     <option value=7>Whip15'</option>
     <option value=8>HF230L</option>
+    <option value=9>Yagi 3el</option>
+    <option value=10>Yagi 6el</option>
+    <option value=11>VertMono</option>
   </select>
   <select style="font-size: 60px" id="loc" name="loc" onchange="selChange()">
     <option value=1 selected>Rural</option>
