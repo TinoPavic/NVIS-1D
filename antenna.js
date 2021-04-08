@@ -11,7 +11,7 @@ function antennaGain(nvis) {
   if(a == 8) g=antennaHf230(fr, h, e);
   if(a == 9) g=antennaDipole(fr, h, e)+5;
   if(a == 10) g=antennaDipole(fr, h, e)+8;
-  if(a == 11) g=antennaDipole(fr, h, e);
+  if(a == 11) g=antennaVertMono(fr, h, e);
   nvis.gain=g;
   console.log(s+"Tx a="+a+", fr="+fr+", h="+h+",g="+g);
   a=nvis.antenna2; h=nvis.mast2;
@@ -25,89 +25,136 @@ function antennaGain(nvis) {
   if(a == 8) g=antennaHf230(fr, h, e);
   if(a == 9) g=antennaDipole(fr, h, e)+5;
   if(a == 10) g=antennaDipole(fr, h, e)+8;
-  if(a == 11) g=antennaDipole(fr, h, e);
+  if(a == 11) g=antennaVertMono(fr, h, e);
   nvis.gain2=g;
   console.log(s+"Rx a="+a+", fr="+fr+", h="+h+",g="+g);
   return g;
 }
 
-function antennaDipole(fr, h, e) {  // Frequency and mast height matter
-  var g= antennaCasgA1(fr, h, e);  
-  return (g+1.0);      
-}
-
 function antennaAsF104(fr, h, e) {  // Frequency and mast height matter
-  var g= antennaCasgA1(fr, h, e);  
-  return (g-1.5);      
+  var g= antennaDipole(fr, h, e);  
+  return (g-2.5);      
 }
 
 function antennaCasgA1(fr, h, e) {  // Frequency and mast height matter
+  var g= antennaDipole(fr, h, e);  
+  return (g-1.0);      
+}
+
+function antennaDipole(fr, h, e) {  // Frequency and mast height matter
   var h= h * fr / 300.0;
-  var g=1.7;   // default 12 m mast, 2 MHz
-  if(e<78) g=1.3;   if(e<63) g=0.1;     if(e<48) g=-1.7; 
-  if(e<33) g=-3.9;  if(e<18) g=-6.9;
+  var g=4.3;   // default NVIS gain for 12 m mast, 2 MHz h=0.08 WL
+  if(e<72) g=3.2;   if(e<63) g=1.8;     if(e<58) g=0.9; 
+  if(e<52) g=-0.2;  if(e<47) g=-1.4;    if(e<42) g=-2.7;
+  if(e<37) g=-4.2;  if(e<32) g=-5.7;    if(e<27) g=-7.3;
+  if(e<22) g=-9;    if(e<17) g=-10.7;   if(e<12) g=-12.8;
+  if(e<9 ) g=-14;   if(e<7)  g=-15.5;   if(e<5) g=-18;
+  if(e<3 ) g=-23;   if(e<1.5)  g=-55;   
   if(h < 0.07) g-=1.4;  // lower masts
   if(h < 0.05) g-=1.9;
   if(h < 0.03) g-=3; 
-  if(h < 0.09)   return g; // eld of lower masts
+  if(h < 0.09)   return g; // end of lower masts
   if(h < 0.13) {
-      g=4.8;   //  18 m mast, 2 MHz
-      if(e<78) g=4.3;   if(e<63) g=2.8;     if(e<48) g=0.4; 
-      if(e<33) g=-2.8;  if(e<18) g=-6.7;
+      g=6;   //  18 m mast, 2 MHz
+      if(e<72) g=4.8;   if(e<63) g=3.4;     if(e<58) g=2.5; 
+      if(e<52) g=1.3;   if(e<47) g=0;       if(e<42) g=-1.4;
+      if(e<37) g=-3.1;  if(e<32) g=-4.8;    if(e<27) g=-6.8;
+      if(e<22) g=-8.8;  if(e<17) g=-10.9;   if(e<12) g=-13.3;
+      if(e<9 ) g=-14.6;   if(e<7)  g=-16.2; if(e<5) g=-18.6;
+      if(e<3 ) g=-23.3;   if(e<1.5)  g=-55;   
       return g;
   }
   if(h < 0.16) {
-      g=5.7;   // 22 m mast, 2 MHz
-      if(e<78) g=5.2;   if(e<63) g=3.6;     if(e<48) g=1; 
-      if(e<33) g=-2.6;  if(e<18) g=-7;
-      return g;
-  }
+    g=6.4;   //  22 m mast, 2 MHz
+    if(e<72) g=5.3;   if(e<63) g=3.9;     if(e<58) g=3; 
+    if(e<52) g=1.8;   if(e<47) g=0.5;     if(e<42) g=-1;
+    if(e<37) g=-2.7;  if(e<32) g=-4.6;    if(e<27) g=-6.6;
+    if(e<22) g=-8.9;  if(e<17) g=-11.2;   if(e<12) g=-13.8;
+    if(e<9 ) g=-15.1;   if(e<7)  g=-16.7; if(e<5) g=-19.2;
+    if(e<3 ) g=-23.9;   if(e<1.5)  g=-56;   
+    return g;  }
   if(h < 0.20) {
-      g=6.2;   // 26 m mast, 2 MHz
-      if(e<78) g=5.7;   if(e<63) g=4;     if(e<48) g=1.3; 
-      if(e<33) g=-2.6;  if(e<18) g=-7.4;
-      return g;
+    g=6.6;   // 26 m mast, 2 MHz
+    if(e<72) g=5.54;   if(e<63) g=4.2;     if(e<58) g=3.2; 
+    if(e<52) g=2.1;   if(e<47) g=0.9;     if(e<42) g=-0.7;
+    if(e<37) g=-2.4;  if(e<32) g=-4.3;    if(e<27) g=-6.5;
+    if(e<22) g=-8.9;  if(e<17) g=-11.5;   if(e<12) g=-14.2;
+    if(e<9 ) g=-15.6;   if(e<7)  g=-17.3; if(e<5) g=-19.7;
+    if(e<3 ) g=-24.5;   if(e<1.5)  g=-57;   
+    return g;
   }
   if(h < 0.27) {
-      g=6.4;   // 36 m mast, 2 MHz
-      if(e<78) g=5.9;   if(e<63) g=4.4;     if(e<48) g=1.6; 
-      if(e<33) g=-2.5;  if(e<18) g=-8;
+      g=6.3;   // 36 m mast, 2 MHz
+      if(e<72) g=6.3;   if(e<63) g=6.2;     if(e<58) g=6.1; 
+      if(e<52) g=5.9;   if(e<47) g=5.7;     if(e<42) g=5.2;
+      if(e<37) g=4.7;  if(e<32) g=3.8;    if(e<27) g=2.7;
+      if(e<22) g=1.2;  if(e<17) g=-1;   if(e<12) g=-4.2;
+      if(e<9 ) g=-6;   if(e<7)  g=-8.5; if(e<5) g=-12;
+      if(e<3 ) g=-17.9;   if(e<1.5)  g=-50;   
       return g;
   }
   if(h < 0.34) {
-      g=5.5;   //  46 m mast, 2 MHz
-      if(e<78) g=5.7;   if(e<63) g=6;     if(e<48) g=5.9; 
-      if(e<33) g=4.5;   if(e<18) g=0;
+      g=5;   //  46 m mast, 2 MHz
+      if(e<72) g=5.5;   if(e<63) g=5.9;     if(e<58) g=6; 
+      if(e<52) g=6.1;   if(e<47) g=6.1;     if(e<42) g=5.9;
+      if(e<37) g=5.5;  if(e<32) g=4.9;    if(e<27) g=4;
+      if(e<22) g=2.6;  if(e<17) g=0.5;   if(e<12) g=-2.6;
+      if(e<9 ) g=-4.4;   if(e<7)  g=-6.8; if(e<5) g=-10.3;
+      if(e<3 ) g=-16.3;   if(e<1.5)  g=-48;   
       return g;
   }
   if(h < 0.40) {
-      g=3.4;   //  56 m mast, 2 MHz
-      if(e<78) g=4;   if(e<63) g=5.3;     if(e<48) g=6.2; 
-      if(e<33) g=5.7;  if(e<18) g=1.7;
+      g=2.4;   //  56 m mast, 2 MHz
+      if(e<72) g=3.7;   if(e<63) g=4.9;     if(e<58) g=5.4; 
+      if(e<52) g=5.9;   if(e<47) g=6.2;     if(e<42) g=6.4;
+      if(e<37) g=6.3;  if(e<32) g=6;    if(e<27) g=5.3;
+      if(e<22) g=4.1;  if(e<17) g=2.2;   if(e<12) g=-0.9;
+      if(e<9 ) g=-2.7;   if(e<7)  g=-5.1; if(e<5) g=-8.5;
+      if(e<3 ) g=-14.4;   if(e<1.5)  g=-45;   
       return g;
   }  
-  if(h < 0.47) {
-      g=-1;   //  66 m mast, 2 MHz
-      if(e<78) g=0.5;   if(e<63) g=3.6;     if(e<48) g=6.2; 
-      if(e<33) g=6.7;  if(e<18) g=3.4;
-      return g;
-  }
-  if(h < 0.54) {
-      g=-11.6;   //  76 m mast, 2 MHz
-      if(e<78) g=-9;   if(e<63) g=-0.3;     if(e<48) g=5.5; 
-      if(e<33) g=7.7;  if(e<18) g=5.1;
-      return g;
-  }
-  if(h < 0.60) {
-      g=0;   //  86 m mast, 2 MHz
-      if(e<78) g=-2.5;   if(e<63) g=-11;     if(e<48) g=3.4; 
-      if(e<33) g=8;  if(e<18) g=6.4;
-      return g;
-  }
-  g=5;   //  96 m mast and over, 2 MHz
-  if(e<78) g=4;   if(e<63) g=-2;     if(e<48) g=-1.7; 
-  if(e<33) g=7.3;  if(e<18) g=7;
+  if(h < 0.44) {
+    g=-3.8;   //  66 m mast, 2 MHz
+    if(e<82) g=-2.7;   if(e<77) g=-1.6;  if(e<72) g=-0.2;  
+    if(e<67) g=1.2;   if(e<62) g=2.7;    if(e<57) g=4;
+    if(e<52) g=5.1;   if(e<47) g=6;     if(e<42) g=6.6;
+    if(e<37) g=7;  if(e<32) g=7;    if(e<27) g=6.6;
+    if(e<22) g=5.6;  if(e<17) g=3.9;   if(e<12) g=0.9;
+    if(e<9 ) g=-0.8;   if(e<7)  g=-3.2; if(e<5) g=-6.6;
+    if(e<3 ) g=-12.5;   if(e<1.5)  g=-44;   
+    return g;
+}
+if(h < 0.54) {
+  g=-7.8;   //  76 m mast, 2 MHz
+  if(e<82) g=-9.7;   if(e<77) g=-11.5;  if(e<72) g=-10.7;  
+  if(e<67) g=-6.5;   if(e<62) g=-2.6;    if(e<57) g=0.6;
+  if(e<52) g=3;   if(e<47) g=5;     if(e<42) g=6.3;
+  if(e<37) g=7.3;  if(e<32) g=7.7;    if(e<27) g=7.7;
+  if(e<22) g=7;  if(e<17) g=5.5;   if(e<12) g=2.7;
+  if(e<9 ) g=1;   if(e<7)  g=-1.3; if(e<5) g=-4.7;
+  if(e<3 ) g=-10.6;   if(e<1.5)  g=-42;   
   return g;
+}
+if(h < 0.66) { 
+  g=5.8; // 96 m mast, 2 MHz
+  if(e<82) g=-5.4;   if(e<77) g=4.9;  if(e<72) g=4;  
+  if(e<67) g=2.5;   if(e<62) g=0;    if(e<57) g=-4.7;
+  if(e<52) g=-13.3;   if(e<47) g=-4.5;     if(e<42) g=1.4;
+  if(e<37) g=4.8;  if(e<32) g=6.8;    if(e<27) g=7.9;
+  if(e<22) g=8;  if(e<17) g=7;   if(e<12) g=4.6;
+  if(e<9 ) g=2.9;   if(e<7)  g=0.7; if(e<5) g=-2.6;
+  if(e<3 ) g=-8.5;   if(e<1.5)  g=-40;   
+  return g;
+}
+g=5.8;   // 120 m mast and over, 2 MHz
+if(e<82) g=6;   if(e<77) g=6.3;  if(e<72) g=6.5;  
+if(e<67) g=6.5;   if(e<62) g=6.2;    if(e<57) g=5.4;
+if(e<52) g=3.7;   if(e<47) g=0;     if(e<42) g=-8.8;
+if(e<37) g=-6.5;  if(e<32) g=1.8;    if(e<27) g=5.5;
+if(e<22) g=6.9;  if(e<17) g=6.9;   if(e<12) g=5;
+if(e<9 ) g=3.6;   if(e<7)  g=1.5; if(e<5) g=-1.8;
+if(e<3 ) g=-7.6;   if(e<1.5)  g=-35;   
+return g;
 }
 
 function antennaRf1944(fr, h, e) {  
@@ -271,6 +318,17 @@ function antennaWhp15(fr, h, e) { // only frequency matters
 
     return g;
   }
+  function antennaVertMono(fr, h, e) {  // Vertical monopole, 6 radials on the ground
+    var g=-19.3;                        // default at 90 deg elevation
+    if(e<87) g=-14.3;   if(e<82) g=-11.1;     if(e<77) g=-8.7; 
+    if(e<72) g=-6.8;    if(e<67) g=-5.2;      if(e<62) g=-4;
+    if(e<57) g=-2.8;    if(e<52) g=-2;        if(e<47) g=-1.2;
+    if(e<42) g=-0.6;    if(e<37) g=-0.1;      if(e<17) g=-0.8; 
+    if(e<12) g=-2.4;    if(e<9) g=-3.5;       if(e<7)   g=-5;
+    if(e<5)  g=-7.6;    if(e<3) g=-12.5;      if(e<1.5) g=-35; 
+    return g;
+  }
+  
   
   
    
