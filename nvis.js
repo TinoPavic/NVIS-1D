@@ -3,7 +3,7 @@ class myNvis {
         this.id=name;       this.code=c;  // debug information
         this.year = 2020;   this.month = 11; 
         this.lat=-38;       this.lon=-144;    
-        this.month=11;      this.year=2020;   
+        this.month=11;      this.year=2020;  this.ssn=20;  
         this.distance=100;  this.gain=6;     this.gain2=6;    
         this.power=52;      this.eirp = 64;  
         this.location=0;    this.storm=0;      
@@ -21,7 +21,7 @@ function nvisInit(nvis) {
   var dt = new Date(); // Current date 
   nvis.year = dt.getFullYear();  nvis.month = dt.getMonth()+1; 
   nvis.lat=-38;       nvis.lon=-144;    
-  nvis.month=11;      nvis.year=2020;   
+  nvis.month=11;      nvis.year=2020;   nvis.ssn=20;
   nvis.distance=100;  nvis.gain=6;    nvis.power=52; nvis.hops=1; 
   nvis.location=0;    nvis.storm=0;    nvis.eirp = 64;  
   nvis.hF2 = 300.0;   nvis.elev=90;    nvis.elevMin=10; nvis.freq=2.2;
@@ -107,20 +107,20 @@ function calcfoF2(nvis) {  // foF2 daily minimum   min 2.0, lat+0.5, fold at S 2
 
 function latestfoF2(nvis) {  // current foF2 min max from Ionosondes
   var t=nvis.lat;
-  var f1=3.2, f3=5.8;                     // Mawson Station, Antarctica   
-  if(t>-50) {f1=2.0; f3=6.1; } // Hobart
-  if(t>-40) {f1=2.2; f3=9.2; } // Learmont, Vic
-  if(t>-36) {f1=2.2; f3=7.6; } // Canberra
+  var f1=2.8, f3=5.7;                     // Mawson Station, Antarctica   
+  if(t>-50) {f1=2.0; f3=7.1; } // Hobart
+  if(t>-40) {f1=2.2; f3=9.0; } // Learmont, Vic
+  if(t>-36) {f1=2.9; f3=7.6; } // Canberra
   if(t>-34.5) {f1=2.9; f3=7.5; } // Camden, Sydney
   if(t>-32.5) {f1=2.9; f3=7.0; } // Perth
-  if(t>-31) {f1=3.0; f3=7.6; } // Brisbane
-  if(t>-23) {f1=3; f3=9.2; } // Townsville
-  if(t>-15) {f1=2.8; f3=12.6; } // Darwin
+  if(t>-31) {f1=3.2; f3=8.0; } // Brisbane
+  if(t>-23) {f1=2.7; f3=9.4; } // Townsville
+  if(t>-15) {f1=2.3; f3=9.8; } // Darwin
   f2 = (f1+f3)/2;// adjust f2
   // Mix with prediction
-  var ye=2021, mo=3, da=23;   // date when Ionosonde adjusted  
+  var ye=2021, mo=4, da=10;   // date when Ionosonde adjusted  
   var d1 = ye*365 + mo*30.5 + da;
-  var d2 = nvis.year*365 + nvis.month*30.5 + 15; // date for prtediction in days
+  var d2 = nvis.year*365 + nvis.month*30.5 + 15; // date prediction in days
   var me=(d2-d1)/90; me=Math.abs(me);
   if(me > 1.0) me=1.0;
   nvis.fc1*=me; nvis.fc1+=f1*(1-me);
@@ -141,11 +141,13 @@ function showCoe(nvis) {
   s="Cor: Cyc=" + s1 + ", Sea=" + s2 +", Lat=" + s3;
   return s;
 }
+
 function showfoF2(nvis) {
   var c, d, e, s, s1, s2, s3;
   c= nvis.fc1; d=nvis.fc2; e=nvis.fc3;
   s1=c.toFixed(1); s2=d.toFixed(1); s3=e.toFixed(1);
   s="foF2(MHz): " + s1 + ",  " + s2 +",  " + s3;
+  s += ",    SSN="+nvis.ssn.toFixed(1);
   return s;
 }
 
@@ -153,13 +155,14 @@ function showMuf(nvis) {
   var s1="MUF(MHz): "+nvis.muf1.toFixed(1);
   s1 += ", "+nvis.muf2.toFixed(1);
   s1 += ", "+nvis.muf3.toFixed(1);
-  s1 += ", Hops="+nvis.hops;
+  s1 += ",    Hops="+nvis.hops;
   s1 += ", El="+nvis.elev.toFixed(1)+" deg";
   return s1;  
 }
 
 function cycleCor(nvis) {
   nvis.cycleCoe = 1.0 - (Math.abs(2025.5-nvis.year))/6.0; 
+  nvis.ssn=nvis.cycleCoe * 100;
   console.log("cycleCor() Yr=" + nvis.year + ",cycleCoe="+nvis.cycleCoe);
   nvis.seasonCoe = (Math.abs(nvis.month-6.0)) / 6.0;
   console.log("cycleCor() Mo=" + nvis.month + ",seasonCoe="+nvis.seasonCoe);
