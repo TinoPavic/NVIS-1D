@@ -150,8 +150,12 @@ function showfoF2(nvis) {
 }
 
 function showMuf(nvis) {
-  var s="MUF(MHz): "+nvis.muf1.toFixed(1)+", "+nvis.muf2.toFixed(1)+", "+nvis.muf3.toFixed(1)+", Hops="+nvis.hops;
-  return s;  
+  var s1="MUF(MHz): "+nvis.muf1.toFixed(1);
+  s1 += ", "+nvis.muf2.toFixed(1);
+  s1 += ", "+nvis.muf3.toFixed(1);
+  s1 += ", Hops="+nvis.hops;
+  s1 += ", El="+nvis.elev.toFixed(1)+" deg";
+  return s1;  
 }
 
 function cycleCor(nvis) {
