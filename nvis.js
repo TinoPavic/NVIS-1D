@@ -5,10 +5,10 @@ class myNvis {
         this.lat=-38;       this.lon=-144;    
         this.month=11;      this.year=2020;   
         this.distance=100;  this.gain=6;     this.gain2=6;    
-        this.power=52;      this.eirp = 64;
+        this.power=52;      this.eirp = 64;  
         this.location=0;    this.storm=0;      
-        this.hF2 = 300.0;   this.elev=90;    this.freq=2.2;
-        this.mast=12;       this.antenna=1;    //tx dipole at 12 m
+        this.hF2 = 300.0;   this.elev=90;    this.elevMin=10;  this.hops=1;
+        this.freq=2.2;      this.mast=12;       this.antenna=1;    //tx dipole at 12 m
         this.mast2=12;      this.antenna2=1;   //rx dipole at 12 m
         this.cycleCoe=1.0;  this.seasonCoe=1.0; this.latCoe=1.0; // Correction factors 
         this.fc1=2.3;  this.fc2=4.0;  this.fc3=5.0;   // foF2 (night, day, noon)
@@ -22,9 +22,9 @@ function nvisInit(nvis) {
   nvis.year = dt.getFullYear();  nvis.month = dt.getMonth()+1; 
   nvis.lat=-38;       nvis.lon=-144;    
   nvis.month=11;      nvis.year=2020;   
-  nvis.distance=100;  nvis.gain=6;    nvis.power=52;  
+  nvis.distance=100;  nvis.gain=6;    nvis.power=52; nvis.hops=1; 
   nvis.location=0;    nvis.storm=0;    nvis.eirp = 64;  
-  nvis.hF2 = 300.0;   nvis.elev=90;    nvis.freq=2.2;
+  nvis.hF2 = 300.0;   nvis.elev=90;    nvis.elevMin=10; nvis.freq=2.2;
   nvis.mast=12;       nvis.antenna=1; //dipole at 12 m
   nvis.cycleCoe=1.0;  nvis.seasonCoe=1.0; nvis.latCoe=1.0; // Correction factors 
   nvis.fc1=2.3;  nvis.fc2=4.0;  nvis.fc3=5.0;   // foF2 (night, day, noon)
@@ -34,6 +34,9 @@ function nvisInit(nvis) {
   nvisCheck(nvis);
   return nvis;
 }
+
+function D2R (n) { var n2 = Math.PI / 180; return n*n2;}
+function R2D (n) { var n2 = Math.PI / 180; return n/n2;}
 
 function nvisCheck(nvis) {
   var s="nvisCheck(): id="+nvis.id+", code="+nvis.code;
@@ -49,12 +52,22 @@ function calcMuf(nvis) {   // Maximum Usable Frequencies (MUF)
 }
 
 function calcSlm(nvis) {   // Secant law multiplier
-  nvis.elev=Math.atan(2*nvis.hF2/nvis.distance); // elevation angle
+  var el1, el2, di1, di2, hops=1;
+  el1 = D2R(nvis.elevMin);   // site minimum elevation - degrees into radians
+  di1 = nvis.distance;
+  el2 = Math.atan(2*nvis.hF2/di1); // elevation angle in radians
+  while (el2 < el1) {
+    hops++;
+    di1 = nvis.distance / hops;
+    el2 = Math.atan(2*nvis.hF2/di1); // elevation angle in radians
+  }
+  console.log("calcSlm(1) hops="+hops+", el1="+ R2D(el1)+", el2="+R2D(el2) );
+  nvis.elev=el2;  nvis.hops = hops; nvis.distance = di1;
   nvis.slm = 1.0 / Math.sin(nvis.elev);          // secant law multiplier
-  nvis.pathdist = nvis.distance / Math.cos(nvis.elev);          // secant law multiplier
+  nvis.pathdist = nvis.distance / Math.cos(nvis.elev);   // secant law multiplier
   nvis.elev *= 180/3.1414;   // into degrees
-  console.log("calcSlm(Dist="+ nvis.distance+", pa.di="+nvis.pathdist+
-          ", slm="+nvis.slm+",el="+nvis.elev);
+  console.log("calcSlm(2)Dist="+ nvis.distance+", pa.di="+nvis.pathdist+", slm="+nvis.slm+",el="+nvis.elev);
+  console.log("calcSlm(3) hops="+ nvis.hops);
 }
 
 function calcfoF2(nvis) {  // foF2 daily minimum   min 2.0, lat+0.5, fold at S 23 
@@ -137,7 +150,7 @@ function showfoF2(nvis) {
 }
 
 function showMuf(nvis) {
-  var s="MUF(MHz): "+nvis.muf1.toFixed(1)+", "+nvis.muf2.toFixed(1)+", "+nvis.muf3.toFixed(1);
+  var s="MUF(MHz): "+nvis.muf1.toFixed(1)+", "+nvis.muf2.toFixed(1)+", "+nvis.muf3.toFixed(1)+", Hops="+nvis.hops;
   return s;  
 }
 

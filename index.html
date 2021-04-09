@@ -11,8 +11,8 @@
 </head>
 
 <body>
-<h1 id=str1>SkyWave v.1.I</h1>
-<h1><a href="help.htm">Help Page</a></h1>
+<!--<h1 id=str1>SkyWave v.1.I</h1>-->
+<h1><a href="help.htm">NVIS v.1.J => Help Page</a></h1>
 <div class="myDiv">
   <h2 id="str2">State, month, year and distance</h2>
   <select style="font-size: 60px" id="state" name="state" onchange="selChange()">
@@ -62,7 +62,7 @@
     <option value=3000>3000 km</option>
     <option value=5000>5000 km</option>
   </select>
-  <h2 id="str3">Transmiter: mast, antenna and power</h2>
+  <h2 id="str3">Transmiter: mast, antenna, power, site minimum elevation</h2>
   <select style="font-size: 60px" id="mast" name="mast" onchange="selChange()">
     <option value=3 >3 m</option>
     <option value=6>6 m</option>
@@ -87,13 +87,25 @@
     <option value=11>VertMono</option>
   </select>
   <select style="font-size: 60px" id="power" name="power" onchange="selChange()">
-    <option value=62 >1500 W</option>
-    <option value=56 >400 W</option>
+    <option value=62>1500 W</option>
+    <option value=56>400 W</option>
     <option value=52>150 W</option>
     <option value=43 selected>20 W</option>
     <option value=37>5 W</option>
     <option value=33>2 W</option>
   </select>
+  <select style="font-size: 60px" id="elmin" name="elmin" onchange="selChange()">
+    <option value=60>60 deg</option>
+    <option value=45>45 deg</option>
+    <option value=30>30 deg</option>
+    <option value=20 selected>20 deg</option>
+    <option value=15>15 deg</option>
+    <option value=10>10 deg</option>
+    <option value=5>5 deg</option>
+    <option value=3>3 deg</option>
+    <option value=2>2 deg</option>
+  </select>
+
   
   <h2 id="str4">Receiver: mast, antenna location and weather</h2>
   <select style="font-size: 60px" id="mast2" name="mast2" onchange="selChange()">
