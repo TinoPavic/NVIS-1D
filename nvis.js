@@ -147,7 +147,7 @@ function showfoF2(nvis) {
   c= nvis.fc1; d=nvis.fc2; e=nvis.fc3;
   s1=c.toFixed(1); s2=d.toFixed(1); s3=e.toFixed(1);
   s="foF2(MHz): " + s1 + ",  " + s2 +",  " + s3;
-  s += ",    SSN="+nvis.ssn.toFixed(1);
+  s += ",    SSN="+nvis.ssn.toFixed(0);
   return s;
 }
 
@@ -156,7 +156,8 @@ function showMuf(nvis) {
   s1 += ", "+nvis.muf2.toFixed(1);
   s1 += ", "+nvis.muf3.toFixed(1);
   s1 += ",    Hops="+nvis.hops;
-  s1 += ", El="+nvis.elev.toFixed(1)+" deg";
+  var s2 = '\xB0';
+  s1 += ", El="+nvis.elev.toFixed(0)+s2;
   return s1;  
 }
 
