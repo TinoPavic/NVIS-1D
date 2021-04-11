@@ -23,8 +23,8 @@ function antennaGain(nvis) {
   if(a == 6) g=antennaWhpBnt(fr, h, e);
   if(a == 7) g=antennaWhp15(fr, h, e);
   if(a == 8) g=antennaHf230(fr, h, e);
-  if(a == 9) g=antennaDipole(fr, h, e)+5;
-  if(a == 10) g=antennaDipole(fr, h, e)+8;
+  if(a == 9) g=antennaYagi3El(fr, h, e);
+  if(a == 10) g=antennaYagi3El(fr, h, e)+2;
   if(a == 11) g=antennaVertMono(fr, h, e);
   nvis.gain2=g;
   console.log(s+"Rx a="+a+", fr="+fr+", h="+h+",g="+g);
@@ -156,6 +156,83 @@ if(e<9 ) g=3.6;   if(e<7)  g=1.5; if(e<5) g=-1.8;
 if(e<3 ) g=-7.6;   if(e<1.5)  g=-35;   
 return g;
 }
+
+function antennaYagi3El(fr, h, e) {  // Frequency and mast height matter
+  var h= h * fr / 300.0;
+  var g=4.2;   // default NVIS gain for 12 m mast, 2 MHz h=0.08 WL
+  if(e<87) g=5.3;   if(e<82) g=6.2;     if(e<77) g=6.9; 
+  if(e<72) g=7.4;   if(e<63) g=7.8;     if(e<58) g=7.9; 
+  if(e<52) g=7.8;  if(e<47) g=7.3;    if(e<42) g=6.7;
+  if(e<37) g=6;  if(e<32) g=5;    if(e<27) g=3.8;
+  if(e<22) g=2;    if(e<17) g=-0.3;   if(e<12) g=-3.7;
+  if(e<9 ) g=-5.6;   if(e<7)  g=-8;   if(e<5) g=-11.5;
+  if(e<3 ) g=-17.6;   if(e<1.5)  g=-50;   
+  if(h < 0.20) {
+    g=4.4;   // 26 m mast, 2 MHz
+    if(e<82) g=5.4;   if(e<77) g=6.2;  if(e<72) g=7;  
+    if(e<67) g=7.7;   if(e<63) g=8.2;     if(e<58) g=8.7; 
+    if(e<52) g=9;   if(e<47) g=9.1;     if(e<42) g=9;
+    if(e<37) g=8.6;  if(e<32) g=8;    if(e<27) g=6.9;
+    if(e<22) g=5.4;  if(e<17) g=3.2;   if(e<12) g=0;
+    if(e<9 ) g=-2;   if(e<7)  g=-4.4; if(e<5) g=-7.8;
+    if(e<3 ) g=-13.8;   if(e<1.5)  g=-52;   
+    return g;
+  }
+  if(h < 0.27) {
+      g=3.4;   // 36 m mast, 2 MHz
+      if(e<82) g=4.6;   if(e<77) g=5.5;  if(e<72) g=6.4;  
+      if(e<67) g=7.3;   if(e<63) g=8.2;     if(e<58) g=8.9; 
+      if(e<52) g=9.4;   if(e<47) g=5.7;     if(e<42) g=9.7;
+      if(e<37) g=9.8;  if(e<32) g=9.2;    if(e<27) g=8.3;
+      if(e<22) g=6.9;  if(e<17) g=4.9;   if(e<12) g=1.7;
+      if(e<9 ) g=-0.1;   if(e<7)  g=-2.5; if(e<5) g=-6;
+      if(e<3 ) g=-12;   if(e<1.5)  g=45;   
+      return g;
+  }
+  if(h < 0.40) {
+      g=-2.3;   //  56 m mast, 2 MHz
+      if(e<82) g=-0.5;   if(e<77) g=1.1;  if(e<72) g=2.7;  
+      if(e<67) g=4.4;   if(e<63) g=6;     if(e<58) g=7.5; 
+      if(e<52) g=8.7;   if(e<47) g=9.7;     if(e<42) g=10.4;
+      if(e<37) g=10.8;  if(e<32) g=10.8;    if(e<27) g=10.3;
+      if(e<22) g=9.4;  if(e<17) g=7.6;   if(e<12) g=4.6;
+      if(e<9 ) g=2.8;   if(e<7)  g=0.5; if(e<5) g=-3;
+      if(e<3 ) g=-9;   if(e<1.5)  g=-41;   
+      return g;
+  }  
+if(h < 0.54) {
+  g=-26.3;   //  76 m mast, 2 MHz
+  if(e<82) g=-44.7;   if(e<77) g=-20;  if(e<72) g=-11.7;  
+  if(e<67) g=-5.8;   if(e<62) g=-1.3;    if(e<57) g=2.4;
+  if(e<52) g=5.3;   if(e<47) g=7.7;     if(e<42) g=9.5;
+  if(e<37) g=10.8;  if(e<32) g=11.6;    if(e<27) g=11.7;
+  if(e<22) g=11.2;  if(e<17) g=9.8;   if(e<12) g=7.1;
+  if(e<9 ) g=5.3;   if(e<7)  g=3; if(e<5) g=-0.4;
+  if(e<3 ) g=-6.3;   if(e<1.5)  g=-37;   
+  return g;
+}
+if(h < 0.66) { 
+  g=0.9; // 96 m mast, 2 MHz
+  if(e<82) g=1.5;   if(e<77) g=1.7;  if(e<72) g=1.5;  
+  if(e<67) g=0.6;   if(e<62) g=-1.7;    if(e<57) g=-7.6;
+  if(e<52) g=-15.2;   if(e<47) g=-0.5;     if(e<42) g=5.1;
+  if(e<37) g=8.6;  if(e<32) g=10.7;    if(e<27) g=11.9;
+  if(e<22) g=12.1;  if(e<17) g=11.2;   if(e<12) g=8.8;
+  if(e<9 ) g=2.9;   if(e<7)  g=0.7; if(e<5) g=-2.6;
+  if(e<3 ) g=-4.4;   if(e<1.5)  g=-35;   
+  return g;
+}
+g=1.1;   // 120 m mast and over, 2 MHz
+if(e<82) g=2.6;   if(e<77) g=3.8;  if(e<72) g=5.1;  
+if(e<67) g=6.1;   if(e<62) g=6.7;    if(e<57) g=6.7;
+if(e<52) g=5.5;   if(e<47) g=2.1;     if(e<42) g=-10.2;
+if(e<37) g=-0.8;  if(e<32) g=-0.7;    if(e<27) g=10.7;
+if(e<22) g=12.3;  if(e<17) g=12.3;   if(e<12) g=10.5;
+if(e<9 ) g=7.2;   if(e<7)  g=4.9; if(e<5) g=1.6;
+if(e<3 ) g=-2.3;   if(e<1.5)  g=-32;   
+return g;
+}
+
 
 function antennaRf1944(fr, h, e) {  
  var g = antennaCasgA1(fr, h, e); 
