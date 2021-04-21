@@ -14,7 +14,7 @@
 <!--<h1 id=str1>SkyWave v.1.I</h1>-->
 <h1><a href="help.htm">NVIS v.1.K => Help Page</a></h1>
 <div class="myDiv">
-  <h2 id="str2">State, month, year and distance</h2>
+  <h2 id="str2">State, month, year, F2 height and distance</h2>
   <select style="font-size: 60px" id="state" name="state" onchange="selChange()">
     <option value=-35.3>ACT</option>
     <option value=-34>NSW</option>
@@ -48,20 +48,29 @@
     <option value=2025>2025</option>
     <option value=2026>2026</option>
   </select>
-  <select style="font-size: 60px" id="dist" name="dist" onchange="selChange()">
-    <option value=30 >30 km</option>
-    <option value=60 selected>60 km</option>
-    <option value=120>120 km</option>
-    <option value=250>250 km</option>
+  <select style="font-size: 60px" id="hiF2" name="hiF2" onchange="selChange()">
+    <option value=200 >200 km</option>
+    <option value=250 selected>250 km</option>
+    <option value=300>300 km</option>
+    <option value=350>350 km</option>
     <option value=400>400 km</option>
+    <option value=450>450 km</option>
+    <option value=500>500 km</option>
+    <option value=550>550 km</option>
     <option value=600>600 km</option>
-    <option value=900>900 km</option>
-    <option value=1200>1200 km</option>
+  </select>
+  <select style="font-size: 60px" id="dist" name="dist" onchange="selChange()">
+    <option value=50 >50 km</option>
+    <option value=100 selected>100 km</option>
+    <option value=200>200 km</option>
+    <option value=400>400 km</option>
+    <option value=800>800 km</option>
     <option value=1500>1500 km</option>
-    <option value=2000>2000 km</option>
     <option value=3000>3000 km</option>
     <option value=5000>5000 km</option>
-  </select>
+    <option value=10000>10000 km</option>
+    <option value=20000>20000 km</option>
+   </select>
   <h2 id="str3">Transmiter: mast, antenna, power, site minimum elevation</h2>
   <select style="font-size: 60px" id="mast" name="mast" onchange="selChange()">
     <option value=3 >3 m</option>

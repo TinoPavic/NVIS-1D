@@ -22,6 +22,7 @@ function selUpdate(nvis) {    // selection has changed
   sel=document.getElementById("dist").value;  nvis.distance=parseFloat(sel);
   sel=document.getElementById("loc").value;   nvis.location=parseInt(sel);
   sel=document.getElementById("storm").value; nvis.storm=parseInt(sel);
+  sel=document.getElementById("hiF2").value; nvis.hF2=parseFloat(sel);
   nvis.gain=3.0;    nvis.eirp = nvis.power+(nvis.gain*2);  
   console.log("selChange(11) "+nvis.lat+","+nvis.month+","+nvis.year);
   console.log("selChange(12) "+nvis.mast+","+nvis.antenna+","+nvis.power);
@@ -109,12 +110,12 @@ function canvasUpdate1(nvis) {    // drawing on canvas
       s=Math.round(nvis.eirp);     ctx.fillText(s, 75, y);
       li= calcFSPL(nvis); 
       var li2 = 20* Math.log10(nvis.hops);
-      li2 += 6*(nvis.hops-1);   
+      li2 += 2*(nvis.hops-1);   
       li += li2;
       s=Math.round(li);     ctx.fillText(s, 175, y);
       ld= calcDrap(nvis);  
       n = 2.2 / nvis.freq; 
-      n = Math.pow(n, 1.2);  
+      n = Math.pow(n, 1.8);  
       ld *= n;   ld *=nvis.hops;
       s=Math.round(ld);      ctx.fillText(s, 280, y);
       s=Math.round(li+ld);   ctx.fillText(s, 370, y);
