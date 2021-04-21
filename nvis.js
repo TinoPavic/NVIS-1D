@@ -51,23 +51,37 @@ function calcMuf(nvis) {   // Maximum Usable Frequencies (MUF)
   nvis.muf3 = nvis.fc3 + 0.6; nvis.muf3 *= 0.9 * nvis.slm;
 }
 
+function Dist2El(nvis) {   // Distance to elevation
+  var a, b=6371,c, A, B,C;   // Triangle
+  b=6371; c= b+nvis.hF2;     // sides b and c are known constants
+  A = Math.PI*nvis.distance/40000; // great circle ang.distance
+  a = c*c+b*b-2*(b*c*Math.cos(A)); // cos rule, 
+  a = Math.sqrt(a);                     // side a = path.dist/2
+  console.log("Dist2El(1) A="+R2D(A)+" deg,  a="+ a + " km");
+  B = (b/a)*Math.sin(A); B = Math.asin(B); // sine law => B
+  C = Math.PI-A-B;  // C = 180-A-B
+  console.log("Dist2El(2) B="+R2D(B)+" deg,  C="+ R2D(C) + " deg");
+  nvis.elev = C-Math.PI/2;        // Elev = C-90deg
+  nvis.slm = 1.0/Math.cos(B);     // secant law multiplier
+  nvis.pathdist = a*2;            // FSPL distance
+  console.log("Dist2El(3) El=",+R2D(nvis.elev)+", PaDi="+nvis.pathdist+", slm="+nvis.slm); 
+  return nvis.elev;
+}
+
 function calcSlm(nvis) {   // Secant law multiplier
   var el1, el2, di1, di2, hops=1;
-  el1 = D2R(nvis.elevMin);   // site minimum elevation - degrees into radians
+  el1 = D2R(nvis.elevMin);   // site minimum elevation - deg to rad
   di1 = nvis.distance;
-  el2 = Math.atan(2*nvis.hF2/di1); // elevation angle in radians
+  el2 = Dist2El(nvis);      // elevation angle in radians
   while (el2 < el1) {
     hops++;
-    di1 = nvis.distance / hops;
-    el2 = Math.atan(2*nvis.hF2/di1); // elevation angle in radians
+    nvis.distance = di1 / hops;
+    el2 = Dist2El(nvis); // elevation angle in radians
   }
   console.log("calcSlm(1) hops="+hops+", el1="+ R2D(el1)+", el2="+R2D(el2) );
-  nvis.elev=el2;  nvis.hops = hops; nvis.distance = di1;
-  nvis.slm = 1.0 / Math.sin(nvis.elev);          // secant law multiplier
-  nvis.pathdist = nvis.distance / Math.cos(nvis.elev);   // secant law multiplier
+  nvis.elev=el2;  nvis.hops = hops; 
   nvis.elev *= 180/3.1414;   // into degrees
-  console.log("calcSlm(2)Dist="+ nvis.distance+", pa.di="+nvis.pathdist+", slm="+nvis.slm+",el="+nvis.elev);
-  console.log("calcSlm(3) hops="+ nvis.hops);
+  console.log("calcSlm(2)Dist="+ nvis.distance+", hops="+nvis.hops);
 }
 
 function calcfoF2(nvis) {  // foF2 daily minimum   min 2.0, lat+0.5, fold at S 23 
