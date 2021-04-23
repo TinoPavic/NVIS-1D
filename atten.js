@@ -90,9 +90,10 @@ function canvasUpdate1(nvis) {    // drawing on canvas
   ctx.fillStyle= "blue"; ctx.fillText(s,1, y+=30);
   s=showMuf(nvis);  
   ctx.fillText(s,1, y+=30);
-  s= "f       Eirp    Li       Ld      Lt        N      SnrD  SnrN"; ctx.fillText(s,1, y+=50);
+  s= "f       Eirp    Li       Ld      Lt        N      SnrM  SnrD SnrN"; ctx.fillText(s,1, y+=50);
   ctx.fillStyle= "black";
   nvis.freq=1.5;
+  var mf=nvis.muf1*1.18;
   for ( i=0; i<25; i++) {
     dT("canvasUpdate(22) i="+i, 3);
       nvisCheck(nvis);
@@ -101,7 +102,8 @@ function canvasUpdate1(nvis) {    // drawing on canvas
       if(i>8) nvis.freq+=0.5;
       if(i>20) nvis.freq+=1;
       ctx.fillStyle="black";
-      if(nvis.freq > nvis.muf3) ctx.fillStyle="red";
+      mf=nvis.muf3*1.18;
+      if(nvis.freq > mf) ctx.fillStyle="red";
       s = nvis.freq.toFixed(1);  
       if(nvis.freq>9.5) s=Math.round(nvis.freq);
       ctx.fillText(s, 1, y);     
@@ -115,15 +117,22 @@ function canvasUpdate1(nvis) {    // drawing on canvas
       s=Math.round(li);     ctx.fillText(s, 175, y);
       ld= calcDrap(nvis);  
       n = 2.2 / nvis.freq; 
-      n = Math.pow(n, 1.8);  
+      n = Math.pow(n, 1.9);  
       ld *= n;   ld *=nvis.hops;
       s=Math.round(ld);      ctx.fillText(s, 280, y);
       s=Math.round(li+ld);   ctx.fillText(s, 370, y);
       n = calcNoise(nvis);   
       s=Math.round(n);     ctx.fillText(s, 460, y);
-      s=Math.round(nvis.eirp+nvis.gain2-li-ld-n); ctx.fillText(s, 570, y);
-      if(nvis.freq > nvis.muf1) ctx.fillStyle="red";
-      s=Math.round(nvis.eirp+nvis.gain2-li-10-n); ctx.fillText(s, 680, y);   
+      s=Math.round(nvis.eirp+nvis.gain2-li-ld-n); // MidDay Snr
+      ctx.fillText(s, 570, y);
+      mf = nvis.muf3*1.01; // Day SNR
+      if(nvis.freq > mf) ctx.fillStyle="red";
+      s=Math.round(nvis.eirp+nvis.gain2-li-ld/1.5-n); 
+      ctx.fillText(s, 680, y);  
+      mf = nvis.muf1*1.18; // Night SNR
+      if(nvis.freq > mf) ctx.fillStyle="red";
+      s=Math.round(nvis.eirp+nvis.gain2-li-10-n); 
+      ctx.fillText(s, 790, y);   
   }  
 }
 
