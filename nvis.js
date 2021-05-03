@@ -122,17 +122,17 @@ function calcfoF2(nvis) {  // foF2 daily minimum   min 2.0, lat+0.5, fold at S 2
 function latestfoF2(nvis) {  // current foF2 min max from Ionosondes
   var t=nvis.lat;
   var f1=2.8, f3=5.7;                     // Mawson Station, Antarctica   
-  if(t>-50) {f1=2.0; f3=7.1; } // Hobart
-  if(t>-40) {f1=2.2; f3=9.0; } // Learmont, Vic
+  if(t>-50) {f1=2.0; f3=7.5; } // Hobart
+  if(t>-40) {f1=2.4; f3=9.0; } // Learmont, Vic
   if(t>-36) {f1=2.9; f3=7.6; } // Canberra
   if(t>-34.5) {f1=2.9; f3=7.5; } // Camden, Sydney
-  if(t>-32.5) {f1=2.9; f3=7.0; } // Perth
+  if(t>-32.5) {f1=2.4; f3=8.2; } // Perth
   if(t>-31) {f1=3.2; f3=8.0; } // Brisbane
-  if(t>-23) {f1=2.7; f3=9.4; } // Townsville
-  if(t>-15) {f1=2.3; f3=9.8; } // Darwin
+  if(t>-23) {f1=2.5; f3=9.4; } // Townsville
+  if(t>-15) {f1=2.1; f3=9.6; } // Darwin
   f2 = (f1+f3)/2;// adjust f2
   // Mix with prediction
-  var ye=2021, mo=4, da=10;   // date when Ionosonde adjusted  
+  var ye=2021, mo=5, da=4;   // date when Ionosonde adjusted  
   var d1 = ye*365 + mo*30.5 + da;
   var d2 = nvis.year*365 + nvis.month*30.5 + 15; // date prediction in days
   var me=(d2-d1)/90; me=Math.abs(me);
