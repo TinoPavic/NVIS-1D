@@ -103,6 +103,7 @@ function canvasUpdate1(nvis) {    // drawing on canvas
       if(i>20) nvis.freq+=1;
       ctx.fillStyle="black";
       mf=nvis.muf3*1.18;
+      if(nvis.freq > nvis.muf3) ctx.fillStyle="orange";
       if(nvis.freq > mf) ctx.fillStyle="red";
       s = nvis.freq.toFixed(1);  
       if(nvis.freq>9.5) s=Math.round(nvis.freq);
