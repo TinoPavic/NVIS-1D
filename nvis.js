@@ -123,7 +123,7 @@ function latestfoF2(nvis) {  // current foF2 min max from Ionosondes
   var t=nvis.lat;
   var f1=2.8, f3=5.7;                     // Mawson Station, Antarctica   
   if(t>-50) {f1=2.0; f3=7.5; } // Hobart
-  if(t>-40) {f1=2.4; f3=9.0; } // Learmont, Vic
+  if(t>-40) {f1=2.4; f3=7.5; } // Vic Mid CBR and Hobart
   if(t>-36) {f1=2.9; f3=7.6; } // Canberra
   if(t>-34.5) {f1=2.9; f3=7.5; } // Camden, Sydney
   if(t>-32.5) {f1=2.4; f3=8.2; } // Perth
@@ -161,7 +161,8 @@ function showfoF2(nvis) {
   c= nvis.fc1; d=nvis.fc2; e=nvis.fc3;
   s1=c.toFixed(1); s2=d.toFixed(1); s3=e.toFixed(1);
   s="foF2(MHz): " + s1 + ",  " + s2 +",  " + s3;
-  s += ",    SSN="+nvis.ssn.toFixed(0);
+  s += ",   SSN="+nvis.ssn.toFixed(0);
+  s += ",   M3000="+nvis.slm.toFixed(2);
   return s;
 }
 
