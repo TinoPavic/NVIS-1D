@@ -45,10 +45,15 @@ function nvisCheck(nvis) {
 }
 
 function calcMuf(nvis) {   // Maximum Usable Frequencies (MUF)
-  var c = nvis.fc2; 
-  nvis.muf1 = nvis.fc1 + 0.6; nvis.muf1 *= 0.9 * nvis.slm;
-  nvis.muf2 = nvis.fc2 + 0.6; nvis.muf2 *= 0.9 * nvis.slm;
-  nvis.muf3 = nvis.fc3 + 0.6; nvis.muf3 *= 0.9 * nvis.slm;
+  var c = nvis.fc2;
+  var fh=0.6;
+  if(nvis.distance>150)   fh= 0.45;
+  if(nvis.distance>600)   fh= 0.32;
+  if(nvis.distance>1200)  fh= 0.23;
+  if(nvis.distance>2500)  fh= 0.15;
+  nvis.muf1 = nvis.fc1 + fh;  nvis.muf1 *= 0.9 * nvis.slm;
+  nvis.muf2 = nvis.fc2 + fh;  nvis.muf2 *= 0.9 * nvis.slm;
+  nvis.muf3 = nvis.fc3 + fh;  nvis.muf3 *= 0.9 * nvis.slm;
 }
 
 function Dist2El(nvis) {   // Distance to elevation
