@@ -162,7 +162,7 @@ function showfoF2(nvis) {
   s1=c.toFixed(1); s2=d.toFixed(1); s3=e.toFixed(1);
   s="foF2(MHz): " + s1 + ",  " + s2 +",  " + s3;
   s += ",   SSN="+nvis.ssn.toFixed(0);
-  s += ",   M3000="+nvis.slm.toFixed(2);
+  s += ",   M3k="+nvis.slm.toFixed(2);
   return s;
 }
 
