@@ -13,7 +13,7 @@ class myNvis {
         this.cycleCoe=1.0;  this.seasonCoe=1.0; this.latCoe=1.0; // Correction factors 
         this.fc1=2.3;  this.fc2=4.0;  this.fc3=5.0;   // foF2 (night, day, noon)
         this.muf1=2.5; this.muf2=4.1; this.muf3=5.1;  // MUF (night, day, noon)
-        this.slm=1.0;  this.pathdist=100.0;  // secant law multiplier
+        this.slm=1.0;  this.pathdist=100.0;  this.B=0.2;// secant law multiplier
     }
 }
 
@@ -28,8 +28,8 @@ function nvisInit(nvis) {
   nvis.mast=12;       nvis.antenna=1; //dipole at 12 m
   nvis.cycleCoe=1.0;  nvis.seasonCoe=1.0; nvis.latCoe=1.0; // Correction factors 
   nvis.fc1=2.3;  nvis.fc2=4.0;  nvis.fc3=5.0;   // foF2 (night, day, noon)
-  nvis.muf1=2.5; nvis.muf2=4.1; nvis.muf3=5.1;  // MUF (night, day, noon)
-  nvis.slm=1.0;  nvis.pathdist=100.0;  // secant law multiplier
+  nvis.muf1=2.5; nvis.muf2=4.1; nvis.muf3=5.1;    // MUF (night, day, noon)
+  nvis.slm=1.0;  nvis.pathdist=100.0;  nvis.B=0.2; // secant law multiplier
   console.log("nvisInit(10) id="+nvis.id+",code="+nvis.code);
   nvisCheck(nvis);
   return nvis;
@@ -69,7 +69,8 @@ function Dist2El(nvis) {   // Distance to elevation
   nvis.elev = C-Math.PI/2;        // Elev = C-90deg
   nvis.slm = 1.0/Math.cos(B);     // secant law multiplier
   nvis.pathdist = a*2;            // FSPL distance
-  console.log("Dist2El(3) El=",+R2D(nvis.elev)+", PaDi="+nvis.pathdist+", slm="+nvis.slm); 
+  nvis.B = B;
+  console.log("Dist2El(3) El=",+R2D(nvis.elev)+", PaDi="+nvis.pathdist+", slm="+nvis.slm+", B="+R2D(nvis.B)); 
   return nvis.elev;
 }
 
@@ -126,18 +127,18 @@ function calcfoF2(nvis) {  // foF2 daily minimum   min 2.0, lat+0.5, fold at S 2
 
 function latestfoF2(nvis) {  // current foF2 min max from Ionosondes
   var t=nvis.lat;
-  var f1=2.8, f3=5.7;                     // Mawson Station, Antarctica   
-  if(t>-50) {f1=2.5; f3=7.0; } // Hobart
-  if(t>-40) {f1=2.7; f3=7.2; } // Vic Mid CBR and Hobart
-  if(t>-36) {f1=2.9; f3=7.4; } // Canberra
-  if(t>-34.5) {f1=2.9; f3=7.5; } // Camden, Sydney
-  if(t>-32.5) {f1=2.1; f3=7.7; } // Perth
+  var f1=2.0, f3=5.7;          // Mawson Station, Antarctica   
+  if(t>-50) {f1=2.3; f3=6.5; } // Hobart
+  if(t>-40) {f1=2.3; f3=6.9; } // Vic Mid CBR and Hobart
+  if(t>-36) {f1=2.4; f3=7.4; } // Canberra
+  if(t>-34.5) {f1=2.1; f3=6.6; } // Camden, Sydney
+  if(t>-32.5) {f1=2.0; f3=6.6; } // Perth
   if(t>-31) {f1=3.0; f3=7.4; } // Brisbane
-  if(t>-23) {f1=2.3; f3=8.0; } // Townsville
-  if(t>-15) {f1=2.1; f3=9.6; } // Darwin
+  if(t>-23) {f1=2.1; f3=7.5; } // Townsville
+  if(t>-15) {f1=2.1; f3=8.6; } // Darwin
   f2 = (f1+f3)/2;// adjust f2
   // Mix with prediction
-  var ye=2021, mo=5, da=25;   // date when Ionosonde adjusted  
+  var ye=2021, mo=6, da=16;   // date when Ionosonde adjusted  
   var d1 = ye*365 + mo*30.5 + da;
   var d2 = nvis.year*365 + nvis.month*30.5 + 15; // date prediction in days
   var me=(d2-d1)/90; me=Math.abs(me);
@@ -178,6 +179,8 @@ function showMuf(nvis) {
   s1 += ",    Hops="+nvis.hops;
   var s2 = '\xB0';
   s1 += ", El="+nvis.elev.toFixed(0)+s2;
+  var c = R2D(nvis.B);
+  s1 += ", B="+c.toFixed(1);
   return s1;  
 }
 
