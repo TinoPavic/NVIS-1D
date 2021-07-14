@@ -9,8 +9,8 @@ function antennaGain(nvis) {
   if(a == 6) g=antennaWhpBnt(fr, h, e);
   if(a == 7) g=antennaWhp15(fr, h, e);
   if(a == 8) g=antennaHf230(fr, h, e);
-  if(a == 9) g=antennaDipole(fr, h, e)+5;
-  if(a == 10) g=antennaDipole(fr, h, e)+8;
+  if(a == 9) g=antennaCasgA2(fr, h, e)+5;
+  if(a == 10) g=antennaYagi3El(fr, h, e)+8;
   if(a == 11) g=antennaVertMono(fr, h, e);
   nvis.gain=g;
   console.log(s+"Tx a="+a+", fr="+fr+", h="+h+",g="+g);
@@ -23,8 +23,8 @@ function antennaGain(nvis) {
   if(a == 6) g=antennaWhpBnt(fr, h, e);
   if(a == 7) g=antennaWhp15(fr, h, e);
   if(a == 8) g=antennaHf230(fr, h, e);
-  if(a == 9) g=antennaYagi3El(fr, h, e);
-  if(a == 10) g=antennaYagi3El(fr, h, e)+2;
+  if(a == 9) g=antennaCasgA2(fr, h, e);
+  if(a == 10) g=antennaYagi3El(fr, h, e);
   if(a == 11) g=antennaVertMono(fr, h, e);
   nvis.gain2=g;
   console.log(s+"Rx a="+a+", fr="+fr+", h="+h+",g="+g);
@@ -300,6 +300,60 @@ function antennaWhpBnt(fr, h, e) {  // only frequency matters
   }
   return g;
 }
+
+function antennaCasgA2(fr, h, e) {  // only frequency matters
+  var g=-9;
+  if(fr<2.5) {  // 2 MHz
+    g=-6.6; 
+    if(e<78) g=-5.8;   if(e<63) g=-5;   if(e<48) g=-4.4; 
+    if(e<33) g=-4.2;  if(e<18) g=-4.9; if(e<11) g=-6.3;
+    if(e<8) g=-4.9;if(e<5) g=-11.4; if(e<2) g=-50;
+    g = g-2.4; // coupler loss
+    return g;
+  }
+  if(fr<2.75) {  // 2.5 MHz
+    g=-4; 
+    if(e<78) g=-3.6;   if(e<63) g=-3.2;   if(e<48) g=-3; 
+    if(e<33) g=-3.1;  if(e<18) g=-4.2; if(e<11) g=-5.7;
+    if(e<8) g=-7.3;if(e<5) g=-11.1; if(e<2) g=-50;
+    g = g-1.1; // coupler loss
+    return g;
+  }
+  if(fr<3.25) {  // 3 MHz
+    g=-1.9; 
+    if(e<78) g=-1.7;   if(e<63) g=-1.7;   if(e<48) g=-1.9; 
+    if(e<33) g=-2.4;  if(e<18) g=-3.8; if(e<11) g=-5.5;
+    if(e<8) g=-7.2;if(e<5) g=-11.1; if(e<2) g=-50;
+    g = g-0.22; // coupler loss
+    return g;
+  }
+  if(fr<4.25) {  // 4 MHz
+    g=1.2; 
+    if(e<78) g=1.1;   if(e<63) g=0.5;   if(e<48) g=-0.5; 
+    if(e<33) g=-1.8;  if(e<18) g=-4; if(e<11) g=-6;
+    if(e<8) g=-7.9;if(e<5) g=-12; if(e<2) g=-50;
+    g = g-0.4; // coupler loss
+    return g;
+  }
+  if(fr<5.25) {  // 5 MHz 
+    g=3.5; 
+    if(e<78) g=3.3;   if(e<63) g=2.6;   if(e<48) g=1.2; 
+    if(e<33) g=-1.4;  if(e<18) g=-6.6; if(e<11) g=-11;
+    if(e<8) g=-14;if(e<5) g=-19.9; if(e<2) g=-50;
+    g = g-0.28; // coupler loss
+    return g;
+  }
+  if(fr> 5.5) {  // 6 MHz 
+    g=4.8; 
+    if(e<78) g=4.6;   if(e<63) g=3.7;   if(e<48) g=2.2; 
+    if(e<33) g=-0.3;  if(e<18) g=-4.6; if(e<11) g=-7.7;
+    if(e<8) g=-10;if(e<5) g=-15; if(e<2) g=-50;
+    g = g-0.11; // coupler loss
+    return g;
+  }  
+  return g;
+}
+
 function antennaWhp15(fr, h, e) { // only frequency matters
     var g;
     g=-11; if(e<78) g=-8;   if(e<63) g=-5;   if(e<48) g=-2; 
