@@ -186,7 +186,7 @@ function showMuf(nvis) {
 
 function cycleCor(nvis) {
   nvis.cycleCoe = 1.0 - (Math.abs(2025.5-nvis.year))/6.0; 
-  nvis.ssn=nvis.cycleCoe * 190;
+  nvis.ssn=nvis.cycleCoe * 230;
   console.log("cycleCor() Yr=" + nvis.year + ",cycleCoe="+nvis.cycleCoe);
   nvis.seasonCoe = (Math.abs(nvis.month-6.0)) / 6.0;
   console.log("cycleCor() Mo=" + nvis.month + ",seasonCoe="+nvis.seasonCoe);
