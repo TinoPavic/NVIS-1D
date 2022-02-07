@@ -56,11 +56,11 @@ function antennaDipole(fr, h, e) {  // Frequency and mast height matter
   if(h < 0.09)   return g; // end of lower masts
   if(h < 0.13) {
       g=6;   //  18 m mast, 2 MHz
-      if(e<72) g=4.8;   if(e<63) g=3.4;     if(e<58) g=2.5; 
-      if(e<52) g=1.3;   if(e<47) g=0;       if(e<42) g=-1.4;
-      if(e<37) g=-3.1;  if(e<32) g=-4.8;    if(e<27) g=-6.8;
-      if(e<22) g=-8.8;  if(e<17) g=-10.9;   if(e<12) g=-13.3;
-      if(e<9 ) g=-14.6;   if(e<7)  g=-16.2; if(e<5) g=-18.6;
+      if(e<72) g=4.8;     if(e<63) g=3.4;     if(e<58) g=2.5; 
+      if(e<52) g=1.3;     if(e<47) g=0;       if(e<42) g=-1.4;
+      if(e<37) g=-3.1;    if(e<32) g=-4.8;    if(e<27) g=-6.8;
+      if(e<22) g=-8.8;    if(e<17) g=-10.9;   if(e<12) g=-13.3;
+      if(e<9 ) g=-14.6;   if(e<7)  g=-16.2;   if(e<5) g=-18.6;
       if(e<3 ) g=-23.3;   if(e<1.5)  g=-55;   
       return g;
   }
@@ -107,10 +107,10 @@ function antennaDipole(fr, h, e) {  // Frequency and mast height matter
       g=2.4;   //  56 m mast, 2 MHz
       if(e<72) g=3.7;   if(e<63) g=4.9;     if(e<58) g=5.4; 
       if(e<52) g=5.9;   if(e<47) g=6.2;     if(e<42) g=6.4;
-      if(e<37) g=6.3;  if(e<32) g=6;    if(e<27) g=5.3;
-      if(e<22) g=4.1;  if(e<17) g=2.2;   if(e<12) g=-0.9;
-      if(e<9 ) g=-2.7;   if(e<7)  g=-5.1; if(e<5) g=-8.5;
-      if(e<3 ) g=-14.4;   if(e<1.5)  g=-45;   
+      if(e<37) g=6.3;   if(e<32) g=6;       if(e<27) g=5.3;
+      if(e<22) g=4.1;   if(e<17) g=2.2;     if(e<12) g=-0.9;
+      if(e<9 ) g=-2.7;  if(e<7)  g=-5.1;    if(e<5) g=-8.5;
+      if(e<3 ) g=-14.4; if(e<1.5)  g=-45;   
       return g;
   }  
   if(h < 0.44) {

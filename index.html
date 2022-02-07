@@ -11,9 +11,9 @@
 </head>
 
 <body>
-<title>NVIS v.115 by Tino Pavic VK3EGN</title>
+<title>NVIS v.116 by Tino Pavic VK3EGN</title>
 <!--<h1 id=str1>SkyWave v.1.I</h1>-->
-<h1><a href="help.htm">NVIS v.1.15 => Help Page</a></h1>
+<h1><a href="help.htm">NVIS => Help Page</a></h1>
 <div class="myDiv">
   <h2 id="str2">State, month, year, F2 height and distance</h2>
   <select style="font-size: 60px" id="state" name="state" onchange="selChange()">
@@ -164,18 +164,19 @@ style="border:1px solid #c3c3c3;">
 <script src="nvis.js"></script>
 <script src="antenna.js"></script>
 <script src="atten.js"></script>
+<script src="nvisGui.js"></script>
 
 <script>
 
-dT("Line1", 1);dT("Line2", 2);dT("Line3", 3);
+//dT("Line1", 1);dT("Line2", 2);dT("Line3", 3);
 var nv = new myNvis("Nvis", 1);
 nvisInit(nv);
-dT("index(3)", 1);
+//dT("index(3)", 1);
 function selChange() { selUpdate(nv)};
-dT("index(5)", 1);
+//dT("index(5)", 1);
 
 selChange(nv);
-dT("index(10)",1);
+//dT("index(10)",1);
 
 </script>
 
