@@ -108,13 +108,13 @@ function calcfoF2(nvis) {  // foF2 daily minimum   min 2.0, lat+0.5, fold at S 2
   nvis.fc1=f;
   //console.log("caclfoF2() 4 fc1=" + this.fc1 + ", fc2=" + this.fc2);
   // foF2 daily maximum 4.7 + 1 for latitude max
-  c=nvis.latCoe;  d = nvis.seasonCoe; e = nvis.cycleCoe;
+  c=nvis.latCoe;  d = nvis.seasonCoe; e = nvis.cycleCoe*1.7;
   f=4.7 + c;             // add lattitude, low season first
   if(d > 0.5  &&  c < 0.65 ) { d=0.5 }  // summer and equinox equal, except tropics
   f *= 1 + 0.9*d;   // summer almost doubles in tropics
   f *= (1 + e/5);   // half cycle is 10% improvement
   if(e > 0.88) {  // Sun cycle peak doubles everything
-    f*=1.3; 
+    f*=1.1; 
   }
   //console.log("caclfoF2() 7 f=" + f);
   if(f < 4.7)  { f = 4.7; } 
@@ -128,17 +128,17 @@ function calcfoF2(nvis) {  // foF2 daily minimum   min 2.0, lat+0.5, fold at S 2
 function latestfoF2(nvis) {  // current foF2 min max from Ionosondes
   var t=nvis.lat;
   var f1=3.0, f3=6.0;          // Mawson Station, Antarctica   
-  if(t>-50) {f1=3.1; f3=7.6; } // Hobart
-  if(t>-40) {f1=3.4; f3=8.4; } // Vic Mid CBR and Hobart
-  if(t>-36) {f1=3.7; f3=9.0; } // Canberra
-  if(t>-34.5) {f1=2.7; f3=8.7; } // Camden, Sydney
-  if(t>-32.5) {f1=3.7; f3=9.2; } // Perth
-  if(t>-31) {f1=4.0; f3=10.5; } // Brisbane
-  if(t>-23) {f1=3.5; f3=12.0; } // Townsville
+  if(t>-50) {f1=3.2; f3=10; } // Hobart
+  if(t>-40) {f1=2.8; f3=10.4; } // Learmonth, Vic
+  if(t>-36) {f1=3.0; f3=10.2; } // Canberra
+  if(t>-34.5) {f1=3.1; f3=10.4; } // Camden, Sydney
+  if(t>-32.5) {f1=3.7; f3=10.5; } // Perth
+  if(t>-31) {f1=4.0; f3=11; } // Brisbane
+  if(t>-23) {f1=3.2; f3=12.0; } // Townsville
   if(t>-15) {f1=3.1; f3=13.5; } // Darwin
   f2 = (f1+f3)/2;// adjust f2
   // Mix with prediction
-  var ye=2022, mo=3, da=10;   // date when Ionosonde adjusted  
+  var ye=2022, mo=5, da=2;   // date when Ionosonde adjusted  
   var d1 = ye*365 + mo*30.5 + da;
   var d2 = nvis.year*365 + nvis.month*30.5 + 15; // date prediction in days
   var me=(d2-d1)/90; me=Math.abs(me);
