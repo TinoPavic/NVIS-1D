@@ -63,7 +63,7 @@ function canvasUpdate1(nvis) {    // drawing on canvas
     s=Math.round(li);     ctx.fillText(s, 175, y);
     ld= calcDrap(nvis);  
     n = 2.2 / nvis.freq; 
-    n = Math.pow(n, 1.9);  
+    n = Math.pow(n, 1.5);  
     ld *= n;   ld *=nvis.hops;
     s=Math.round(ld);      ctx.fillText(s, 280, y);
     s=Math.round(li+ld);   ctx.fillText(s, 370, y);

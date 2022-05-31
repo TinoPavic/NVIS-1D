@@ -3,7 +3,7 @@ class myNvis {
         this.id=name;       this.code=c;  // debug information
         this.year = 2022;   this.month = 3; 
         this.lat=-38;       this.lon=-144;    
-        this.month=11;      this.year=2020;  this.ssn=20;  
+        this.month=6;       this.year=2022;  this.ssn=80;  
         this.distance=100;  this.gain=6;     this.gain2=6;    
         this.power=52;      this.eirp = 64;  
         this.location=0;    this.storm=0;      
@@ -21,10 +21,10 @@ function nvisInit(nvis) {
   var dt = new Date(); // Current date 
   nvis.year = dt.getFullYear();  nvis.month = dt.getMonth()+1; 
   nvis.lat=-38;       nvis.lon=-144;    
-  nvis.month=3;      nvis.year=2022;   nvis.ssn=20;
-  nvis.distance=100;  nvis.gain=6;    nvis.power=52; nvis.hops=1; 
-  nvis.location=0;    nvis.storm=0;    nvis.eirp = 64;  
-  nvis.hF2 = 300.0;   nvis.elev=90;    nvis.elevMin=10; nvis.freq=2.2;
+  nvis.month=3;       nvis.year=2022;   nvis.ssn=80;
+  nvis.distance=100;  nvis.gain=6;      nvis.power=52; nvis.hops=1; 
+  nvis.location=0;    nvis.storm=0;     nvis.eirp = 64;  
+  nvis.hF2 = 300.0;   nvis.elev=90;     nvis.elevMin=10; nvis.freq=2.2;
   nvis.mast=12;       nvis.antenna=1; //dipole at 12 m
   nvis.cycleCoe=1.0;  nvis.seasonCoe=1.0; nvis.latCoe=1.0; // Correction factors 
   nvis.fc1=2.3;  nvis.fc2=4.0;  nvis.fc3=5.0;   // foF2 (night, day, noon)
@@ -34,6 +34,17 @@ function nvisInit(nvis) {
   nvisCheck(nvis);
   return nvis;
 }
+
+function cycleCor(nvis) { // Current SSN, cycleCoe, seasonCoe, latCoe
+  var yr = (12*nvis.year+ nvis.month)/12;
+  nvis.cycleCoe = 1.0 - (Math.abs(2025.5-yr))/6.0; 
+  nvis.ssn=nvis.cycleCoe * 170;
+  console.log("cycleCor() Yr=" + nvis.year + ",cycleCoe="+nvis.cycleCoe);
+  nvis.seasonCoe = (Math.abs(nvis.month-6.0)) / 6.0;
+  console.log("cycleCor() Mo=" + nvis.month + ",seasonCoe="+nvis.seasonCoe);
+  nvis.latCoe = (nvis.lat + 43)/31;
+  console.log("cycleCor() lat="+nvis.lat+", latCoe=" + nvis.latCoe);
+} 
 
 function D2R (n) { var n2 = Math.PI / 180; return n*n2;}
 function R2D (n) { var n2 = Math.PI / 180; return n/n2;}
@@ -92,34 +103,21 @@ function calcSlm(nvis) {   // Secant law multiplier
 
 function calcfoF2(nvis) {  // foF2 daily minimum   min 2.0, lat+0.5, fold at S 23 
   var c, d, e, f;
-  c=nvis.latCoe;  d = nvis.seasonCoe; e = nvis.cycleCoe;  
-  if(c > 0.65)  { c-=0.65; } // fold arround S 23
-  f = 2.0 + (c * 0.77);     // min 2.0, lat+0.5, cycle peak summer double 
-  f += (d/2);        // summer + 0.5
-  //console.log("caclfoF2() 1 f=" + f);
-  if (e > 0.88) {  // only peak cycle affects foF2 minimum 
-    f *= 2 ; // doubles during peak cycle summer
-    f -= d * 2;
-  }
-  //console.log("caclfoF2() 2 f=" + f);
-  if(f < 2.0) { f=2.0;}  
-  if(f > 6.5) { f=6.5;}  
-  //console.log("caclfoF2() 3 f=" + f);
+  c = nvis.latCoe;  d = nvis.seasonCoe; e = nvis.cycleCoe;  
+  // find minimum foF2
+  f = 1.8 + (d * 0.8);     // winter 1.8, summer 2.6
+  f *= (e + 1);            // Solar peak doubles
+  if(f < 1.8) { f=1.8;}    // Low limit
+  if(f > 6.5) { f=6.5;}    // hi limit
   nvis.fc1=f;
-  //console.log("caclfoF2() 4 fc1=" + this.fc1 + ", fc2=" + this.fc2);
-  // foF2 daily maximum 4.7 + 1 for latitude max
-  c=nvis.latCoe;  d = nvis.seasonCoe; e = nvis.cycleCoe*1.7;
-  f=4.7 + c;             // add lattitude, low season first
-  if(d > 0.5  &&  c < 0.65 ) { d=0.5 }  // summer and equinox equal, except tropics
+  // find maximum foF2 
+  c=nvis.latCoe;  d = nvis.seasonCoe; e = nvis.cycleCoe;
+  f = 4.7 + c;             // low season first 4.7 to 5.7
+  if(d > 0.5  &&  c < 0.65 ) { d=0.5 }  // summer and equinox equal
   f *= 1 + 0.9*d;   // summer almost doubles in tropics
-  f *= (1 + e/5);   // half cycle is 10% improvement
-  if(e > 0.88) {  // Sun cycle peak doubles everything
-    f*=1.1; 
-  }
-  //console.log("caclfoF2() 7 f=" + f);
+  f *= (1 + 1.8*e);   // half cycle is 10% improvement
   if(f < 4.7)  { f = 4.7; } 
   if(f > 14.3) { f = 14.3;}
-  //console.log("caclfoF2() 8 f=" + f);
   nvis.fc3 = f;                   // daily maximum
   nvis.fc2 = (f + nvis.fc1)/2;    // mid value
   console.log("caclfoF2() fc1=" + nvis.fc1 + ", fc3=" + nvis.fc3);
@@ -180,20 +178,10 @@ function showMuf(nvis) {
   var s2 = '\xB0';
   s1 += ", El="+nvis.elev.toFixed(0)+s2;
   var c = R2D(nvis.B);
-  s1 += ", B="+c.toFixed(1);
+  s1 += ", B="+c.toFixed(1)+s2;
   return s1;  
 }
 
-function cycleCor(nvis) {
-  var yr = (12*nvis.year+ nvis.month)/12;
-  nvis.cycleCoe = 1.0 - (Math.abs(2025.5-yr))/6.0; 
-  nvis.ssn=nvis.cycleCoe * 170;
-  console.log("cycleCor() Yr=" + nvis.year + ",cycleCoe="+nvis.cycleCoe);
-  nvis.seasonCoe = (Math.abs(nvis.month-6.0)) / 6.0;
-  console.log("cycleCor() Mo=" + nvis.month + ",seasonCoe="+nvis.seasonCoe);
-  nvis.latCoe = (nvis.lat + 43)/31;
-  console.log("cycleCor() lat="+nvis.lat+", latCoe=" + nvis.latCoe);
-} 
 
 function nvisPredict (nvis) {
   nvisCheck(nvis);
