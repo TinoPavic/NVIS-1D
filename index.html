@@ -1,184 +1,232 @@
 <!DOCTYPE html>
 <html>
-<head>
-<style>
-.myDiv {
-  border: 5px outset red;
-  background-color: lightblue;    
-  text-align: left;
-}
-</style>
-</head>
+    <head>
+        <link rel="stylesheet" href="index.css">
+    </head>
 
-<body>
-<title>NVIS v.117 by Tino Pavic VK3EGN</title>
-<!--<h1 id=str1>SkyWave v.1.I</h1>-->
-<h1><a href="help.htm">NVIS => Help Page</a></h1>
-<div class="myDiv">
-  <h2 id="str2">State, month, year, F2 height and distance</h2>
-  <select style="font-size: 60px" id="state" name="state" onchange="selChange()">
-    <option value=-35.3>ACT</option>
-    <option value=-34>NSW</option>
-    <option value=-37 selected>VIC</option>
-    <option value=-27.2>QLD</option>
-    <option value=-31>SA</option>
-    <option value=-32>WA</option>
-    <option value=-43>TAS</option>
-    <option value=-12>NT</option>
-  </select>
-  <select style="font-size: 60px" id="month" name="month" onchange="selChange()">
-    <option value=1>Jan</option>
-    <option value=2>Feb</option>
-    <option value=3> Mar</option>
-    <option value=4>Apr</option>
-    <option value=5>May</option>
-    <option value=6 selected>Jun</option>
-    <option value=7>Jul</option>
-    <option value=8>Aug</option>
-    <option value=9>Sep</option>
-    <option value=10>Oct</option>
-    <option value=11>Nov</option>
-    <option value=12>Dec</option>
-  </select>
-  <select style="font-size: 60px" id="year" name="year" onchange="selChange()">
-    <option value=2020>2020</option>
-    <option value=2021>2021</option>
-    <option value=2022 selected>2022</option>
-    <option value=2023>2023</option>
-    <option value=2024>2024</option>
-    <option value=2025>2025</option>
-    <option value=2026>2026</option>
-  </select>
-  <select style="font-size: 60px" id="hiF2" name="hiF2" onchange="selChange()">
-    <option value=200 >200 km</option>
-    <option value=250>250 km</option>
-    <option value=300 selected>300 km</option>
-    <option value=350>350 km</option>
-    <option value=400>400 km</option>
-    <option value=450>450 km</option>
-    <option value=500>500 km</option>
-    <option value=550>550 km</option>
-    <option value=600>600 km</option>
-  </select>
-  <select style="font-size: 60px" id="dist" name="dist" onchange="selChange()">
-    <option value=50 >50 km</option>
-    <option value=100 selected>100 km</option>
-    <option value=200>200 km</option>
-    <option value=400>400 km</option>
-    <option value=800>800 km</option>
-    <option value=1500>1500 km</option>
-    <option value=3000>3000 km</option>
-    <option value=5000>5000 km</option>
-    <option value=10000>10000 km</option>
-    <option value=20000>20000 km</option>
-   </select>
-  <h2 id="str3">Transmiter: mast, antenna, power, site minimum elevation</h2>
-  <select style="font-size: 60px" id="mast" name="mast" onchange="selChange()">
-    <option value=3 >3 m</option>
-    <option value=6>6 m</option>
-    <option value=9>9 m</option>
-    <option value=12 selected>12 m</option>
-    <option value=18>18 m</option> 
-    <option value=22>22 m</option>
-    <option value=26>26 m</option>
-    <option value=40>40 m</option>
-  </select>  
-  <select style="font-size: 60px" id="antenna" name="antenna" onchange="selChange()">
-    <option value=1 selected>Dipole</option>
-    <option value=2>CASG-A1</option>
-    <option value=3>AS-F104</option>
-    <option value=4>RF-1944</option>
-    <option value=5>MIL-2</option>
-    <option value=6>WhipBnt</option>
-    <option value=7>Whip15'</option>
-    <option value=8>HF230L</option>
-    <option value=9>CASG-A2</option>
-    <option value=10>Yagi 3el</option>
-    <option value=11>VertMono</option>
-  </select>
-  <select style="font-size: 60px" id="power" name="power" onchange="selChange()">
-    <option value=62>1500 W</option>
-    <option value=56>400 W</option>
-    <option value=52>150 W</option>
-    <option value=43 selected>20 W</option>
-    <option value=37>5 W</option>
-    <option value=33>2 W</option>
-  </select>
-  <select style="font-size: 60px" id="elmin" name="elmin" onchange="selChange()">
-    <option value=60>60 &deg</option>
-    <option value=45>45 &deg</option>
-    <option value=30>30 &deg</option>
-    <option value=20 selected>20 &deg</option>
-    <option value=15>15 &deg</option>
-    <option value=10>10 &deg</option>
-    <option value=5>5 &deg</option>
-    <option value=3>3 &deg</option>
-    <option value=2>2 &deg</option>
-    <option value=1>1 &deg</option>
-  </select>
+    <body>
+        <title>NVIS v.117 by Tino Pavic VK3EGN</title>
 
-  
-  <h2 id="str4">Receiver: mast, antenna location and weather</h2>
-  <select style="font-size: 60px" id="mast2" name="mast2" onchange="selChange()">
-    <option value=3 >3 m</option>
-    <option value=6>6 m</option>
-    <option value=9>9 m</option>
-    <option value=12 selected>12 m</option>
-    <option value=18>18 m</option> 
-    <option value=22>22 m</option>
-    <option value=26>26 m</option>
-    <option value=40>40 m</option>
-  </select>  
-  <select style="font-size: 60px" id="antenna2" name="antenna2" onchange="selChange()">
-    <option value=1 selected>Dipole</option>
-    <option value=2>CASG-A1</option>
-    <option value=3>AS-F104</option>
-    <option value=4>RF-1944</option>
-    <option value=5>MIL-2</option>
-    <option value=6>WhipBnt</option>
-    <option value=7>Whip15'</option>
-    <option value=8>HF230L</option>
-    <option value=9>CASG-A2</option>
-    <option value=10>Yagi 3el</option>
-    <option value=11>VertMono</option>
-  </select>
-  <select style="font-size: 60px" id="loc" name="loc" onchange="selChange()">
-    <option value=1 selected>Rural</option>
-    <option value=2>Suburb</option>
-    <option value=3>City</option>
-  </select>  
-  <select style="font-size: 60px" id="storm" name="storm" onchange="selChange()">
-    <option value=1 selected>Quiet</option>
-    <option value=2>Rainy</option>
-    <option value=3>Storm</option> 
-    <option value=4>BFS</option>
-  </select>
+        <h1>NVIS</h1>
+        <a id="help" href="help.htm">Help</a>
 
-</div>
-    
-<body>
+        <div class="myDiv">
 
-<canvas id="myCanvas" width="900" height="1100"   
-style="border:1px solid #c3c3c3;">
+            <p class="heading" style="margin-top: 0px">Conditions</p>
+            <div class="flex-options">
+                <div>
+                    <p>State</p>
+                    <select class="flex-select" id="state">
+                        <option value=-35.3>ACT</option>
+                        <option value=-34>NSW</option>
+                        <option value=-37 selected>VIC</option>
+                        <option value=-27.2>QLD</option>
+                        <option value=-31>SA</option>
+                        <option value=-32>WA</option>
+                        <option value=-43>TAS</option>
+                        <option value=-12>NT</option>
+                    </select>
+                </div>
+                <div>
+                    <p>Month</p>
+                    <select class="flex-select" id="month">
+                        <option value=1>Jan</option>
+                        <option value=2>Feb</option>
+                        <option value=3> Mar</option>
+                        <option value=4>Apr</option>
+                        <option value=5>May</option>
+                        <option value=6 selected>Jun</option>
+                        <option value=7>Jul</option>
+                        <option value=8>Aug</option>
+                        <option value=9>Sep</option>
+                        <option value=10>Oct</option>
+                        <option value=11>Nov</option>
+                        <option value=12>Dec</option>
+                    </select>
+                </div>
+                <div>
+                    <p>Year</p>
+                    <select class="flex-select" id="year">
+                        <option value=2020>2020</option>
+                        <option value=2021>2021</option>
+                        <option value=2022 selected>2022</option>
+                        <option value=2023>2023</option>
+                        <option value=2024>2024</option>
+                        <option value=2025>2025</option>
+                        <option value=2026>2026</option>
+                    </select>
+                </div>
+                <div>
+                    <p>F2 Height</p>
+                    <select class="flex-select" id="hiF2">
+                        <option value=200 >200 km</option>
+                        <option value=250>250 km</option>
+                        <option value=300 selected>300 km</option>
+                        <option value=350>350 km</option>
+                        <option value=400>400 km</option>
+                        <option value=450>450 km</option>
+                        <option value=500>500 km</option>
+                        <option value=550>550 km</option>
+                        <option value=600>600 km</option>
+                    </select>
+                </div>
+                <div>
+                    <p>Distance</p>
+                    <select class="flex-select" id="dist">
+                        <option value=50 >50 km</option>
+                        <option value=100 selected>100 km</option>
+                        <option value=200>200 km</option>
+                        <option value=400>400 km</option>
+                        <option value=800>800 km</option>
+                        <option value=1500>1500 km</option>
+                        <option value=3000>3000 km</option>
+                        <option value=5000>5000 km</option>
+                        <option value=10000>10000 km</option>
+                        <option value=20000>20000 km</option>
+                    </select>
+                </div>
+            </div>
 
-<script src="nvis.js"></script>
-<script src="antenna.js"></script>
-<script src="atten.js"></script>
-<script src="nvisGui.js"></script>
+            <p class="heading">Transmitter</p>
+            <div class="flex-options flex-options-4">
+                <div>
+                    <p>Mast</p>
+                    <select class="flex-select" id="mast">
+                        <option value=3 >3 m</option>
+                        <option value=6>6 m</option>
+                        <option value=9>9 m</option>
+                        <option value=12 selected>12 m</option>
+                        <option value=18>18 m</option> 
+                        <option value=22>22 m</option>
+                        <option value=26>26 m</option>
+                        <option value=40>40 m</option>
+                    </select>  
+                </div>
+                <div>
+                    <p>Antenna</p>
+                    <select class="flex-select" id="antenna">
+                        <option value=1 selected>Dipole</option>
+                        <option value=2>CASG-A1</option>
+                        <option value=3>AS-F104</option>
+                        <option value=4>RF-1944</option>
+                        <option value=5>MIL-2</option>
+                        <option value=6>WhipBnt</option>
+                        <option value=7>Whip15'</option>
+                        <option value=8>HF230L</option>
+                        <option value=9>CASG-A2</option>
+                        <option value=10>Yagi 3el</option>
+                        <option value=11>VertMono</option>
+                    </select>
+                </div>
+                <div>
+                    <p>Power</p>
+                    <select class="flex-select" id="power">
+                        <option value=62>1500 W</option>
+                        <option value=56>400 W</option>
+                        <option value=52>150 W</option>
+                        <option value=43 selected>20 W</option>
+                        <option value=37>5 W</option>
+                        <option value=33>2 W</option>
+                    </select>
+                </div>
+                <div>
+                    <p>Site Minimum Elevation</p>
+                    <select class="flex-select" id="elmin">
+                        <option value=60>60 &deg</option>
+                        <option value=45>45 &deg</option>
+                        <option value=30>30 &deg</option>
+                        <option value=20 selected>20 &deg</option>
+                        <option value=15>15 &deg</option>
+                        <option value=10>10 &deg</option>
+                        <option value=5>5 &deg</option>
+                        <option value=3>3 &deg</option>
+                        <option value=2>2 &deg</option>
+                        <option value=1>1 &deg</option>
+                    </select>
+                </div>
+            </div>
 
-<script>
+            <p class="heading">Receiver</p>
+            <div class="flex-options flex-options-4">
+                <div>
+                    <p>Mast</p>
+                    <select class="flex-select" id="mast2">
+                        <option value=3 >3 m</option>
+                        <option value=6>6 m</option>
+                        <option value=9>9 m</option>
+                        <option value=12 selected>12 m</option>
+                        <option value=18>18 m</option> 
+                        <option value=22>22 m</option>
+                        <option value=26>26 m</option>
+                        <option value=40>40 m</option>
+                    </select>  
+                </div>
+                <div>
+                    <p>Antenna</p>
+                    <select class="flex-select" id="antenna2">
+                        <option value=1 selected>Dipole</option>
+                        <option value=2>CASG-A1</option>
+                        <option value=3>AS-F104</option>
+                        <option value=4>RF-1944</option>
+                        <option value=5>MIL-2</option>
+                        <option value=6>WhipBnt</option>
+                        <option value=7>Whip15'</option>
+                        <option value=8>HF230L</option>
+                        <option value=9>CASG-A2</option>
+                        <option value=10>Yagi 3el</option>
+                        <option value=11>VertMono</option>
+                    </select>
+                </div>
+                <div>
+                    <p>Location</p>
+                    <select class="flex-select" id="loc">
+                        <option value=1 selected>Rural</option>
+                        <option value=2>Suburb</option>
+                        <option value=3>City</option>
+                    </select>  
+                </div>
+                <div>
+                    <p>Weather</p>
+                    <select class="flex-select" id="storm">
+                        <option value=1 selected>Quiet</option>
+                        <option value=2>Rainy</option>
+                        <option value=3>Storm</option> 
+                        <option value=4>BFS</option>
+                    </select>
+                </div>
 
-//dT("Line1", 1);dT("Line2", 2);dT("Line3", 3);
-var nv = new myNvis("Nvis", 1);
-nvisInit(nv);
-//dT("index(3)", 1);
-function selChange() { selUpdate(nv)};
-//dT("index(5)", 1);
+            </div>
+        </div>
 
-selChange(nv);
-//dT("index(10)",1);
+        <canvas id="myCanvas" width="900" height="1100"   
+                                          style="border:1px solid #c3c3c3;">
 
-</script>
+            <script src="nvis.js"></script>
+            <script src="antenna.js"></script>
+            <script src="atten.js"></script>
+            <script src="nvisGui.js"></script>
 
-</body>
+            <script>
+
+                //dT("Line1", 1);dT("Line2", 2);dT("Line3", 3);
+                var nv = new myNvis("Nvis", 1);
+                nvisInit(nv);
+                //dT("index(3)", 1);
+                function selChange() { selUpdate(nv)};
+                //dT("index(5)", 1);
+
+
+                // Setup onchange lister for all inputs
+                inputs = document.getElementsByClassName("flex-select");
+                for (var i=0; i<inputs.length;i++) {
+                                    inputs[i].addEventListener("change", () => selUpdate(nv))
+                                }
+
+
+                selChange(nv);
+                //dT("index(10)",1);
+
+            </script>
+
+    </body>
 </html>

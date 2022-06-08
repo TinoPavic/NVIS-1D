@@ -1,0 +1,74 @@
+h1 {
+    margin-left: 5%;
+}
+
+.myDiv {
+    border: 5px outset red;
+    background-color: lightblue;    
+    text-align: left;
+    width: 90%;
+    margin-left: 4%;
+    padding: 10px;
+}
+
+#help {
+    right: 5%;
+    position: absolute;
+    top: 25px;
+}
+
+.heading {
+    padding: 5px;
+    font-weight: bold;
+    margin-bottom: 0.2vw;
+    margin-top: 1vw;
+}
+
+.flex-options {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.flex-options div {
+    flex-grow: 1;
+    padding: 5px;
+}
+
+.flex-options p {
+    font-size: 1.3vw;
+    margin: 0px;
+}
+
+.flex-options select {
+    font-size: 3vw;
+    width: 100%;
+}
+
+
+/* Mobile Version */
+@media (max-width: 750px) {
+    h1 {
+        margin-left: 1%;
+    }
+
+    .myDiv {
+        margin-left: 1%;
+    }
+
+    .flex-options div {
+        flex-basis: 30%;
+    }
+
+    .flex-options p {
+        font-size: 3vw;
+    }
+
+    .flex-options select {
+        font-size: 5vw;
+    }
+
+    .flex-options-4 div {
+        flex-basis: 40%;
+    }
+}
