@@ -191,26 +191,6 @@ function calcMuf(nvis) {   // Maximum Usable Frequencies (MUF)
   console.log("calcMuf(), f1= " + nvis.muf1.toFixed(1) + ",muf3=" + nvis.muf3.toFixed(1));
 }
 
-// Use hF2 and loop elevation angle C => calculate SLM and skip distance
-function caclSkip(nvis) {    // save skip and slm for each degree elev (0 to 90)
-  var el, v1, v2, di;        
-  var a, b=6371, c, A, B,C;     // Triangle
-  c= b + nvis.hF2;              // sides b and c are known , angle C will loop
-  for(el=0; el<90; el++) {      // wave elevation angle (horizon=0)
-    C = 90 + el;  
-    C  =D2R(C);
-    v1 = (b / c) * Math.sin(C);   // sinus rule: b/c = sinB/sinC => sinB= (b/c) *sinC
-    B = Math.asin(v1);            // wave incidence angle into F2 (vertical=normal=0)
-    v2 = 1.0 / Math.cos(B);       // secant law multiplier
-    nvis.skipSlm[el] = v2;        // secant law multiplier
-    nvis.skipB[el] = R2D(B);
-    A = Math.PI - C - B;          // angle A
-    di= 40000.0 * A / Math.PI;
-    nvis.skipDist[el]= di;
-    if(el==0)  console.log("calcSkip(" + el + ") Di=" + di.toFixed(0) + " slm=" + v2.toFixed(3)+",B="+R2D(B).toFixed(1));
-  }
-}
- 
 function showSel(nvis) {
   var s= "Lat=" + nvis.lat  + ", Mon=" + nvis.month + ", Yr=" + nvis.year;
   return s;
@@ -226,10 +206,8 @@ function showCoe(nvis) {
 
 function showfoF2(nvis) {
   var s;
-  s = "foF2(MHz): " + nvis.fc1.toFixed(1);
-  s += ", " + nvis.fc2.toFixed(1) + ", " + nvis.fc2.toFixed(1);
-  s += ", SSN=" + nvis.ssn.toFixed(0);
-  s += ", SLM=" + nvis.slm.toFixed(2);
+  s = "foF2(MHz): "+nvis.fc1.toFixed(1)+", "+nvis.fc2.toFixed(1)+", "+nvis.fc3.toFixed(1);
+  s += ", SSN=" + nvis.ssn.toFixed(0)+", SLM=" + nvis.slm.toFixed(2);
   return s;
 }
 
@@ -239,7 +217,7 @@ function showMuf(nvis) {
   s1 += ", " + nvis.muf3.toFixed(1);
   s1 += ",    Hops=" + nvis.hops;
   var s2 = '\xB0';
-  s1 += ", El=" + nvis.elev.toFixed(0) + s2;
+  s1 += ", El=" + nvis.elev.toFixed(1) + s2;
   var c = R2D(nvis.B);
   s1 += ", B=" + c.toFixed(1) + s2;
   return s1;  
@@ -277,6 +255,26 @@ function calcSNR(nvis) {    // frequency scan
     if(i==0 || i==10) console.log("calcSNR("+nvis.freq.toFixed(2)+") FSPL="+nvis.Lii[i].toFixed(0)); 
     nvis.freq += 0.5
   } 
+}
+
+// Use hF2 and loop elevation angle C => calculate SLM and skip distance
+function caclSkip(nvis) {    // save skip and slm for each degree elev (0 to 90)
+  var el, v1, v2, di;        
+  var a, b=6371, c, A, B,C;     // Triangle
+  c= b + nvis.hF2;              // sides b and c are known , angle C will loop
+  for(el=0; el<90; el++) {      // wave elevation angle (horizon=0)
+    C = 90 + el;  
+    C  =D2R(C);
+    v1 = (b / c) * Math.sin(C);   // sinus rule: b/c = sinB/sinC => sinB= (b/c) *sinC
+    B = Math.asin(v1);            // wave incidence angle into F2 (vertical=normal=0)
+    v2 = 1.0 / Math.cos(B);       // secant law multiplier
+    nvis.skipSlm[el] = v2;        // secant law multiplier
+    nvis.skipB[el] = R2D(B);
+    A = Math.PI - C - B;          // angle A
+    di= 40000.0 * A / Math.PI;
+    nvis.skipDist[el]= di;
+    if(el==0)  console.log("calcSkip(" + el + ") Di=" + di.toFixed(0) + " slm=" + v2.toFixed(3)+",B="+R2D(B).toFixed(1));
+  }
 }
 
 function nvisPredict (nvis) {

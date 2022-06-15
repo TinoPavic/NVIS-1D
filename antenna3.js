@@ -77,8 +77,6 @@ function antennaWhp3M(fr, h, el) {  // PMV Bent Whip pattern
   return antennaInterpolate(fr, h, el, f, e, g, ga);
 }
 
-
-
 function antennaVertMono(fr, h, el) {  // PMV Bent Whip pattern
   var s="antVertMono() ";
   console.log(s+"fr="+fr.toFixed(1)+",h="+h.toFixed(1)+", el="+el.toFixed(1));
@@ -165,7 +163,7 @@ function antennaDipole2(fr, h, el) {    // Inv Vee on 6 m mast
 
 function antennaDipole3(fr, h, el) {    // Inv Vee on 12 m mast
   var s="antDipole3() ";
-  //console.log(s+"fr="+fr.toFixed(1)+",h="+h.toFixed(1)+", el="+el.toFixed(1));
+  console.log(s+"fr="+fr.toFixed(1)+",h="+h.toFixed(1)+", el="+el.toFixed(1));
   // Data from antenna pattern table
   var f  = [1.5, 2, 3, 4.5, 7, 10, 15];   // frequency list
   var ga = [-2.7, -1.6,-0.4, 0.1, 2.2, 2.7, 0.0];   // average gain over elevation
@@ -210,8 +208,8 @@ function antennaDipole5(fr, h, el) {    // Inv Vee on 26 m mast
   console.log(s+"fr="+fr.toFixed(1)+",h="+h.toFixed(1)+", el="+el.toFixed(1));
   // Data from antenna pattern table
   var f  = [1.5,   2,   3, 4.5,   7,  10,  15];   // frequency list
-  var ga = [0.4, 0.8, 1.1, 3.2, 0.5, 3.1, 3.6];   // average gain over elevation
-  var e  = [0,2,4, 6,10,15, 30,45,60, 75,90] ; // Elevation list
+  var ga = [0.4, 0.8, 1.1, 3.2, 0.5, 3.1, 3.6];   // average gain g(f)
+  var e  = [0,2,4, 6,10,15, 30,45,60, 75,90] ;    // Elevation list
 
   var g1 = [-100,-14.0,-9.5,   -7.3,-5.1,-3.4,     -1.1,0.9,2.3,      3.2,3.6];  // 1.5 MHz
   var g2 = [-100,-14.1,-9.5,   -7.2,-4.8,-2.9,     -0.5,1.2,2.7,      3.6,3.9];   // 2 MHz
@@ -226,46 +224,68 @@ function antennaDipole5(fr, h, el) {    // Inv Vee on 26 m mast
   return antennaInterpolate(fr, h, el, f, e, g, ga);
 }
 
+function antennaInterpolate(fr, h, el, f, e, g, gavg) {
+  // fr = operating frequency link uses in MHz
+  // h = antenna height in m 
+  // el = elevation link uses in degrees
+  // f[] = frequency list for antenna pattern in MHz
+  // e[] = elevation list for antenna pattern in degrees
+  // g[f][e] = antenna pattern data
 
-function antennaInterpolate(fr, h, el, f, e, g, ga) {
   var s1="antIntpol() ", s2;
   var eLen, fLen, eInx,fInx;
-  var gain=[0, 0];
+  var gain=[0, 0];    // gain[0] is exact for given elevation and frequency, gain[1] average gain
   eLen=e.length;
   fLen=f.length;
   //console.log(s1+"eLen=" + eLen+", fLen=" + fLen);
+
+  // Lets find indexes for frequency and elevation
   var i, m;
   eInx=0; fInx=0;
   for(i=0; i<eLen; i++) {  // find elevation index 
-    m=e[i]+0.1; 
+    m=e[i]-0.1; 
     if(el > m) eInx=i; 
   }  
   for(i=0; i<fLen; i++) {  // find frequency index 
-    m=f[i]+0.1; 
+    m=f[i]-0.1; 
     if(fr > m) fInx=i; 
-  }  
-  gain[1] = ga[fInx];
-  //console.log(s1+"eInx="+eInx+", fInx=", fInx);
+  } 
+  // Update gain[] array using these indexes 
+  gain[0] = g[fInx][eInx]; // exact gain for given frequency and elevation 
+  gain[1] = gavg[fInx];    // average gain for given frequency
+  console.log(s1+"eInx="+eInx+", fInx=", fInx);
   
+  //Interpolate exact gain for elevation first,  then frequency
   var ga1, ga2;
   ga1 = g[fInx][eInx];
   //console.log(s1+"eInx="+eInx+", fInx=", fInx+", g="+ga1.toFixed(1));
 
+  // interpolate for elevation first
   var dx=0, dy=0, dxdy=1, ds=0;
-  if((eInx+1) < eLen) {                   // interpolate for elevation if there is next index
-    dy=g[fInx][eInx+1] - g[fInx][eInx];
-    dx = e[eInx+1]-e[eInx];
-    if(dx>0.01) dxdy = dy/dx;
-    else dxdy=1.0;
-    ds = dxdy*(el-e[eInx]);
-    ga1 += ds;
+  if((eInx+1) < eLen) {                   // interpolate if there is next elevation index
+    dy=g[fInx][eInx+1] - g[fInx][eInx];   // gain diff 
+    dx = e[eInx+1]-e[eInx];               // elevation diff 
+    if(dx>0.01) dxdy = dy/dx;             // gain slope 
+    else dxdy=1.0;                        // default gain slope
+    ds = dxdy*(el-e[eInx]);               // slope *  
+    ga1 += ds;                            // gain change
     s2=s1+"1. dx="+dx.toFixed(3)+", dy="+dy.toFixed(3)+", ds="+ds.toFixed(3)+", ga1="+ga1.toFixed(2);
     //console.log(s2);
   }
-  gain[0]=ga1
+  gain[0]=ga1;  // update gain[] with result of elevation interpolation
 
   if((fInx+2) > fLen)  return gain; // can't interpolate frequency with next index
-  
+
+  //interpolate average gain over frequency
+  dx = f[fInx+1]-f[fInx];          // frequency diff on x axes
+  dy = gavg[fInx+1]-gavg[fInx];    // gavg diff on y axes
+  dxdy = dy/dx;                    // slope gavg(f)
+  var dx2 = fr-f[fInx];
+  ds = dxdy *(fr-f[fInx]);         // slope * frequency error 
+  gain[1]= gavg[fInx] + ds;        // interpolation adjustment
+  console.log("Ipol gavg["+fInx+"] dx2="+dx2+", ds="+ds.toFixed(2))
+
+  // Interpolate exact gain for frequency
   ga2 = g[fInx+1][eInx];                      // Gain at the next frequency
   dy = g[fInx+1][eInx+1] - g[fInx+1][eInx];   // Interpolate for elevation 
   dx = e[eInx+1]-e[eInx];
@@ -281,35 +301,10 @@ function antennaInterpolate(fr, h, el, f, e, g, ga) {
   if(dx>0.01) dxdy = dy/dx;
   else dxdy=1.0;
   ds = dxdy*(fr - f[fInx]);
-  ga1 += ds
+  ga1 += ds;
   s2=s1+"3. dx="+dx.toFixed(3)+", dy="+dy.toFixed(3)+", ds="+ds.toFixed(3)+", ga1="+ga1.toFixed(2);
   //console.log(s2);
   gain[0]=ga1;
   return gain;
 }
  
-/*
-function antennaWhp15(fr, h, e) { // only frequency matters
-  if(e < 1.5)  return -99;
-  // default gain above 9 MHz
-  var g = -11;
-  if(e<78) g=-8;   
-  if(e<63) g=-5;   
-  if(e<48) g=-2; 
-  if(e<33) g=-0;  
-  if(e<18) g=-1; 
-  if(e<6)  g=-5; 
-  if(e<4)  g=-9; 
-  // frequency correction
-  if(fr > 9  )  return g;
-  if(fr > 7.5)  return g-1;
-  if(fr > 6.5)  return g-2;
-  if(fr > 5.5)  return g-3;
-  if(fr > 4.5)  return g-4;
-  if(fr > 3.5)  return g-5;
-  if(fr > 2.5)  return g-8;
-  return g-13;
-}
-*/
-    
-  

@@ -3,44 +3,9 @@
 <!-- NVIS Planning Tool -->
 <html>
 <head>
-<title>NVIS v.119 by Tino Pavic VK3EGN</title>
+<title>NVIS v.120 by Tino Pavic VK3EGN</title>
 
-<style>
-.button {
-  border: none;
-  color: white;
-  padding: 10px 10px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  transition-duration: 0.4s;
-  cursor: pointer;
-}
-
-.button1 {
-  background-color: white;
-  color: black;
-  border: 2px solid #4CAF50;
-}
-
-.button1:hover {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.button2 {
-  background-color: white;
-  color: black;
-  border: 2px solid #008CBA;
-}
-
-.button2:hover {
-  background-color: #008CBA;
-  color: white;
-}
-
+<style> 
 .myDiv {
   border: 5px outset red;
   background-color: lightblue;    
@@ -54,20 +19,13 @@
 
 <div class="myDiv">
   <select style="font-size: 30px" id="selAct" name="selAct" onchange="selChange()">
-    <option value=1 selected>Table View</option>
-    <option value=2>SNR Plot</option>
-    <option value=3>Skip Plot</option>
-    <option value=4>SLM Plot</option>  
-    <option value=9>Help</option>
+    <option value=1 selected>View Table</option>
+    <option value=2>View SNR</option>
+    <option value=3>View Skip</option>
+    <option value=4>View SLM</option>  
+    <option value=9>View Help</option>
   </select>
   
- <!-- 
-  
-  <button class="button button1" onclick="myTest2()">Test2</button>  
-  <button class="button button1" onclick="clkB2()">SNR</button>
-  <button class="button button1" onclick="clkB3()">Skip</button>
-  <h2 id="str2">State, month, year, F2 height and distance</h2> 
- -->
   <select style="font-size: 30px" id="statex" name="statex" onchange="selChange()">
     <option value=-35.3>ACT</option>
     <option value=-34>NSW</option>

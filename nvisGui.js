@@ -1,24 +1,10 @@
-// pushbutton click callback functions
-
-function myTest1() { 
-  console.log("myTest1()"); 
-  //antennaTest2(4, 2, 44);
-}
-
-function myTest2() { 
-  console.log("myTest2()"); 
-  //antennaTest2(7, 2, 66);
-}
   
 function selUpdate(nvis) {    // selection has changed
   var sel, inx;
   sel=document.getElementById("selAct").value; 
   inx = parseInt(sel);
   if(inx < 5)   nvis.viewMode=inx;
-  if(inx == 9) {
-    window.location.assign("help.htm");
-    return;
-  }   
+  if(inx == 9) { window.location.assign("help.htm"); return; }   
   sel=document.getElementById("statex").value; 
   nvis.lat=parseFloat(sel);
   sel=document.getElementById("month").value;   
@@ -47,10 +33,7 @@ function selUpdate(nvis) {    // selection has changed
   nvis.storm=parseInt(sel);
   sel=document.getElementById("selGrx").value; 
   nvis.grxMode=parseInt(sel);
-  console.log("selChange() ViewMode="+nvis.viewMode+",grxMode="+nvis.grxMode); 
-  //nvis.gain=3.0;    
-  //nvis.eirp = nvis.power + (nvis.gain*2);  
-   
+  console.log("selChange() ViewMode="+nvis.viewMode+",grxMode="+nvis.grxMode);    
   nvisPredict(nvis);
   canvasDraw(nvis);
 }
@@ -61,15 +44,15 @@ function canvasDraw(nvis) {    // drawing on canvas
   var canvas = document.getElementById("myCanvas");  // find canvas element
   var ctx = canvas.getContext("2d");      // get drawing object
   ctx.clearRect(0, 0, 900, 1100);
-  ctx.fillStyle = "#FF0000";      // set fill style to red color
+  ctx.fillStyle = "blue";      // set fill style to blue color
   ctx.font = "20px Arial";        // draw text
   var y=0, s;
   s=showfoF2(nvis); 
-  ctx.fillStyle= "blue"; ctx.fillText(s,1, y+=20);
+  ctx.fillText(s, 1, y+=20);
   s=showMuf(nvis);  
-  ctx.fillText(s,1, y+=20);
+  ctx.fillText(s, 1, y+=20);
   if(nvis.viewMode==1)  canvasTable(nvis);
-  if(nvis.viewMode==2)  canvasPlot(nvis);
+  if(nvis.viewMode==2)  canvasSNR(nvis);
   if(nvis.viewMode==3)  canvasSkip(nvis);
   if(nvis.viewMode==4)  canvasSlm(nvis);
 }
@@ -149,6 +132,7 @@ function canvasTable(nvis) {    // drawing on canvas
   }  
   y=850;
   ctx.fillStyle="blue";      // Add text bellow y=820
+  ctx.font = "20px Arial";        // draw text
   ctx.fillText("Eirp is transmitted signal power at origin in dBm units.", 1, y); y+=30;
   ctx.fillText("Fspl is signal loss over signal path in dB units (daily maximum).", 1, y); y+=30;
   ctx.fillText("Drap is signal loss in D layer in dB (daily maximum).", 1, y); y+=30;
@@ -160,17 +144,17 @@ function canvasTable(nvis) {    // drawing on canvas
   ctx.fillText("Minimum SNR is 10 dB for SSB voice, and 6 dB for data.", 1, y); y+=30;
 }
 
-function canvasPlot(nvis) {    // drawing on canvas
+function canvasSNR(nvis) {    // drawing on canvas
   console.log("canvasPlot(1)"); 
   nvisCheck(nvis);
   var canvas = document.getElementById("myCanvas");  // find canvas element
   var ctx = canvas.getContext("2d");      // get drawing object
   ctx.clearRect(0, 45, 00, 1100);
-  ctx.fillStyle = "#FF0000";      // set fill style to red color
+  ctx.fillStyle = "black";      // set fill style to red color
   ctx.font = "20px Arial";        // draw text
   var i,s;
-  s="SNR 10 dB/div";  
-  ctx.fillText(s, 750, 65);
+  s="Signal to noise ratio (SNR) 10 dB/div";  
+  ctx.fillText(s, 400, 65);
   
   // Plot SNR data
   // Canvas x=0 to 900 => frequency =0 to 30  => x= 30 * frequency
@@ -250,16 +234,17 @@ function canvasPlot(nvis) {    // drawing on canvas
   ctx.strokeStyle="blue"; ctx.stroke();
   ctx.fillStyle="blue"; ctx.fillText("Night", 200, 65); 
   // Add text bellow y=550
-  ctx.fillStyle="blue";      y=580;
-  ctx.fillText("Eirp is transmitted signal power at origin in dBm units.", 1, y); y+=30;
-  ctx.fillText("Fspl is signal loss over signal path in dB units (daily maximum).", 1, y); y+=30;
-  ctx.fillText("Drap is signal loss in D layer in dB (daily maximum).", 1, y); y+=30;
-  ctx.fillText("Lt is total signal loss(Fspl+Drap) in dB (daily maximum).", 1, y); y+=30;
-  ctx.fillText("N is noise power at receive location in dBm units, for BW=3kHz.", 1, y); y+=30;
-  ctx.fillText("Snr is ratio of signal S and noise N in dB units.", 1, y); y+=30;
-  ctx.fillText("SnrM/D/N are Snr levels for midday/day/night.", 1, y); y+=30;
+  ctx.fillStyle="blue";      y=580;  
+  ctx.fillText("Graph shows SNR levels for midday, day and night.", 1, y); y+=30;
+  ctx.fillText("SNR is ratio of signal S and noise N in decibel (dB) units.", 1, y); y+=30;
   ctx.fillText("Signal must overcome noise, in order to be received.", 1, y); y+=30;
   ctx.fillText("Minimum SNR is 10 dB for SSB voice, and 6 dB for data.", 1, y); y+=30;
+  ctx.fillStyle = "red";
+  ctx.fillText("Shorter distances use low frequency and high elevation.", 1, y); y+=30;
+  ctx.fillText("Longer distances use high frequency and low elevation.", 1, y); y+=30;
+  ctx.fillStyle = "blue";
+  ctx.fillText("Good NVIS frequencies are 4-8 MHz for day, and 2-4 MHz for night.", 1, y); y+=30;
+  ctx.fillText("Good long range frequencies are 10-30 MHz for day, and 6-14 MHz for night.", 1, y); y+=30;
 }
 
 function canvasSkip(nvis) {    // drawing skip on canvas
@@ -378,14 +363,18 @@ function canvasSkip(nvis) {    // drawing skip on canvas
   ctx.fillStyle="blue"; ctx.fillText("Night", 200, 65);
   // Add text bellow y=600
   ctx.fillStyle="blue";      y=600;
+  ctx.fillText("Graph shows skip zone for day, midday and night.", 1, y); y+=30;
   ctx.fillText("Skip zone is zone around transmiter without signal coverage.", 1, y); y+=30;
-  ctx.fillText("Skip zone is big problem for NVIS use, but OK for SkyWave.", 1, y); y+=30; 
+  ctx.fillText("It's shape is circle with diameter from 0 to 5,000 km.", 1, y); y+=30;
+  ctx.fillStyle="red"; 
   ctx.fillText("If we use frequency below critical foF2, there will be no skip zone.", 1, y); y+=30;
-  ctx.fillText("Using frequency over critical creates skip zone with no coverage.", 1, y); y+=30;
-  ctx.fillText("Higher the frequency, larger the skip zone (up to 5,000 km).", 1, y); y+=30;  
-  ctx.fillText("Frequencies above 10 MHz are used for long distance (1,000 to 30,000 km).", 1, y); y+=30; 
-  ctx.fillText("Low frequencies are used for 0 to 500 km.", 1, y); y+=30;
+  ctx.fillText("Using frequency over critical creates skip zone.", 1, y); y+=30;
+  ctx.fillText("Higher the frequency, larger the skip zone (up to 5,000 km).", 1, y); y+=30; 
+  ctx.fillStyle="blue";  
   ctx.fillText("Good NVIS freqs are 2-4 MHz during night, and 4-8 MHz during day.", 1, y); y+=30;  
+  ctx.fillText("Skip zone is big problem for NVIS use, but OK for SkyWave.", 1, y); y+=30;   
+  ctx.fillText("Frequencies above 10 MHz are used for long distance (1,000 to 30,000 km).", 1, y); y+=30;  
+  ctx.fillText("In this case skip zone is not a problem.", 1, y); y+=30;  
 }
 
 function canvasSlm(nvis) {    // drawing Secant law multiplier
@@ -473,18 +462,24 @@ function canvasSlm(nvis) {    // drawing Secant law multiplier
  
   // Add text bellow y=600
   ctx.fillStyle="blue";      y=600; 
-  ctx.fillText("Critical frequency is the highest frequency Ionosphere will reflect back.", 1, y); y+=30;
+  ctx.fillText("Graph shows Secant Law Multiplier, dependant on elevation angle [0 is horizon].", 1, y); y+=30;
+  ctx.fillText("Secant Law Multiplier (SLM) multiples critical frequency by factor of 1 to 5.", 1, y); y+=30;
+  ctx.fillText("Critical frequency (fc) is the highest frequency Ionosphere will reflect back.", 1, y); y+=30;
   ctx.fillText("Frequencies above critical will pass through Ionosphere without reflection.", 1, y); y+=30;
-  ctx.fillText("foF2 is critical frequency for layer F2 at vertical wave incidence.", 1, y); y+=30;
-  ctx.fillText("F2 will reflect vertical wave if frequency is not over foF2.", 1, y); y+=30;
-  ctx.fillText("Waves entering F2 layer at lower angles will have higher critical frequency fc.", 1, y); y+=30;
-  ctx.fillStyle="red";
-  ctx.fillText("This relationship is called Secant Law => fc = foF2 * sec (B).", 1, y); y+=30;
-  ctx.fillText("Wave is sent at elevation angle EL (horizon is 0, up is 90 degrees).", 1, y); y+=30; 
-  ctx.fillText("Wave enters F2 layer at angle B (perpendicular is 90 degrees).", 1, y); y+=30; 
-  ctx.fillStyle="blue";  
-  ctx.fillText("Secant Law Multiplier SLM increases critical frequency by factor of 1 to 6.", 1, y); y+=30; 
-  ctx.fillText("For wave entering F2 at 30 degrees critical frequency fc = 2 * foF2.", 1, y); y+=30; 
+  ctx.fillStyle = "red";
+  ctx.fillText("Waves at lower elevation angles will have higher critical frequency fc.", 1, y); y+=30;
+  ctx.fillText("This relationship is called Secant Law :", 1, y); y+=30;
+  ctx.fillText("fc = foF2 * sec (B)", 50, y); y+=30;
+  ctx.fillText("- fc is critical frequency for layer F2 at vertical wave incidence.", 100, y); y+=30;
+  ctx.fillText("- foF2 is critical frequency for layer F2 at vertical wave incidence.", 100, y); y+=30;
+  ctx.fillText("- B is wave ange of incidence into F2 layer.", 100, y); y+=30;
+  ctx.fillText("- SLM is expression used for sec(B)", 100, y); y+=50;
+  ctx.fillStyle="green";
+  ctx.fillText("Example:     hF2=300 km,      distance=3,000 km,    foF2=4 MHz", 1, y); y+=34; 
+  ctx.fillText("Wave is sent at elevation angle El=4.2"+'\xB0'+" (close to horizon)", 1, y); y+=30; 
+  ctx.fillText("300 km above ground wave enters F2 layer at angle B=72.3"+'\xB0', 1, y); y+=30;   
+  ctx.fillText("SLM = sec(72.3"+'\xB0'+ ")= 3.28   =>    fc = 3.28 * 4 = 13.08 MHz", 1, y); y+=30; 
+  ctx.fillText("Reflected wave will return to Earth at 3,000 km distance", 1, y); y+=30; 
 }
 
 
