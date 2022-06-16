@@ -2,6 +2,8 @@
 <html>
     <head>
         <link rel="stylesheet" href="index.css">
+        <script src="plotly-latest.min.js"></script>
+
     </head>
 
     <body>
@@ -130,7 +132,7 @@
                     </select>
                 </div>
                 <div>
-                    <p>Site Minimum Elevation</p>
+                    <p>SM Elevation</p>
                     <select class="flex-select" id="elmin">
                         <option value=60>60 &deg</option>
                         <option value=45>45 &deg</option>
@@ -142,6 +144,14 @@
                         <option value=3>3 &deg</option>
                         <option value=2>2 &deg</option>
                         <option value=1>1 &deg</option>
+                    </select>
+                </div>
+		            <div>
+                    <p>GRX</p>
+                    <select class="flex-select" id="grx">
+                        <option value=0>GRX Off</option>
+                        <option value=1>GRX On</option>
+                        <option value=2>GRX-Avg</option>
                     </select>
                 </div>
             </div>
@@ -197,36 +207,60 @@
 
             </div>
         </div>
+        <select id="selAct" name="selAct" onchange="viewChange()">
+            <option value="1" selected="">View Table</option>
+            <option value="2">View SNR</option>
+            <option value="3">View Skip</option>
+            <option value="4">View SLM</option> 
+            <option value="9">View Help</option>
+        </select>
+        <div id="tooltipi">i</div>
+        <div id="tooltip">
+            Eirp is transmitted signal power at origin in dBm units.<br>Fspl is signal loss over signal path in dB units (daily maximum).<br>Drap is signal loss in D layer in dB (daily maximum).<br>Lt is total signal loss(Fspl+Drap) in dB (daily maximum).<br>N is noise power at receive location in dBm units, for BW=3kHz.<br>Snr is ratio of signal S and noise N in dB units.<br>"SnrM/D/N are Snr levels for midday/day/night.<br>Signal must overcome noise, in order to be received.<br>Minimum SNR is 10 dB for SSB voice, and 6 dB for data.<br>
+        </div>
+        <div class="plotsDiv">
+            <div id="plotTableDiv" class="plotTableDiv">
+                <table id="plotTable"></table>
+            </div>
+            <div id="SNRPlot"></div>
+        </div>
 
-        <canvas id="myCanvas" width="900" height="1100"   
-                                          style="border:1px solid #c3c3c3;">
 
-            <script src="nvis.js"></script>
-            <script src="antenna.js"></script>
-            <script src="atten.js"></script>
-            <script src="nvisGui.js"></script>
+        <script src="nvis.js"></script>
+        <script src="antenna.js"></script>
+        <script src="antenna3.js"></script>
+        <script src="atten.js"></script>
+        <script src="nvisGui.js"></script>
 
-            <script>
+        <script>
+            var nv = new myNvis("Nvis", 1);
+            nvisInit(nv);
 
-                //dT("Line1", 1);dT("Line2", 2);dT("Line3", 3);
-                var nv = new myNvis("Nvis", 1);
-                nvisInit(nv);
-                //dT("index(3)", 1);
-                function selChange() { selUpdate(nv)};
-                //dT("index(5)", 1);
+            // Setup onchange lister for all inputs
+            inputs = document.getElementsByClassName("flex-select");
+            for (var i=0; i<inputs.length;i++) {
+                inputs[i].addEventListener("change", () => selUpdate(nv))
+            }
+            selUpdate(nv);
 
 
-                // Setup onchange lister for all inputs
-                inputs = document.getElementsByClassName("flex-select");
-                for (var i=0; i<inputs.length;i++) {
-                    inputs[i].addEventListener("change", () => selUpdate(nv))
+            function viewChange() {
+                sel = document.getElementById("selAct").value;
+                table = document.getElementById("plotTableDiv");
+                SNRPlot = document.getElementById("SNRPlot");
+                tooltipi = document.getElementById("tooltipi")
+
+                table.style.display = "none";
+                SNRPlot.style.display = "none";
+                tooltipi.style.display = "block";
+                if (sel == 1) {
+                    table.style.display = "block";
+                    tooltipi.style.display = "none";
+                } else if (sel == 2) {
+                    SNRPlot.style.display = "block";
                 }
-
-
-                selChange(nv);
-                //dT("index(10)",1);
-
-            </script>
-
-    </body>
+                selUpdate(nv)
+            }
+            viewChange();
+        </script>
 </html>
