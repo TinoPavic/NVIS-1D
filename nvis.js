@@ -2,7 +2,9 @@ class myNvis {
     constructor(name, c) {
         console.log("nvisContructor");
         this.id=name;       
-        this.code=c;  
+        this.code=c; 
+        this.canW=300; 
+        this.canH=300; 
         this.snrM = [0,0,0,0];      
         this.snrD = [0,0,0,0];   
         this.snrN = [0,0,0,0];
@@ -10,6 +12,8 @@ class myNvis {
         this.Ldd  = [0,0,0,0];  
         this.Eii  = [0,0,0,0];       
         this.Nnn  = [0,0,0,0];
+        this.Gtx  = [0,0,0,0];
+        this.Grx  = [0,0,0,0];
         this.skipDist = [0,0,0,0];  
         this.skipSlm =  [0,0,0,0]; 
         this.skipB =  [0,0,0,0];  
@@ -21,6 +25,7 @@ function nvisInit(nvis) {
   var dt = new Date(); // Current date 
   nvis.year = dt.getFullYear();  
   nvis.month = dt.getMonth()+1; 
+  nvis.canW=screen.width; nvis.canH=screen.height;  // initial canvas size
   nvis.lat=-38;       nvis.lon=-144;    
   nvis.month=3;       nvis.year=2022;     nvis.ssn=80;
   nvis.viewMode=1;    nvis.distance=100;  
@@ -39,7 +44,8 @@ function nvisInit(nvis) {
   for(i=0; i<62; i++) {
     nvis.Eii[i]=47.0;     nvis.Lii[i]=200.0;    nvis.Ldd[i]=200.0;  
     nvis.Nnn[i]=-130;
-    nvis.snrM[i]=-30.0;   nvis.snrD[i]=-30.0;   nvis.snrN[i]=-30.0;         
+    nvis.snrM[i]=-30.0;   nvis.snrD[i]=-30.0;   nvis.snrN[i]=-30.0;   
+    nvis.Gtx[i] = -40.0;  nvis.Grx[i]=-40.0;      
   }
   for(i=0; i<92; i++) {
     nvis.skipDist[i]=0;  nvis.skipSlm[i]=1.0; nvis.skipB[i]=30;
@@ -206,13 +212,14 @@ function showCoe(nvis) {
 
 function showfoF2(nvis) {
   var s;
-  s = "foF2(MHz): "+nvis.fc1.toFixed(1)+", "+nvis.fc2.toFixed(1)+", "+nvis.fc3.toFixed(1);
+  s = "foF2: "+nvis.fc1.toFixed(1)+", "+nvis.fc2.toFixed(1);
+  s += ", "+nvis.fc3.toFixed(1);
   s += ", SSN=" + nvis.ssn.toFixed(0)+", SLM=" + nvis.slm.toFixed(2);
   return s;
 }
 
 function showMuf(nvis) {
-  var s1 = "MUF(MHz): " + nvis.muf1.toFixed(1);
+  var s1 = "FOT: " + nvis.muf1.toFixed(1);
   s1 += ", " + nvis.muf2.toFixed(1);
   s1 += ", " + nvis.muf3.toFixed(1);
   s1 += ",    Hops=" + nvis.hops;
@@ -233,6 +240,8 @@ function calcSNR(nvis) {    // frequency scan
     nvis.snrN[i]=-30.0;
     //nvisCheck(nvis); 
     n=antennaGain(nvis);  // Gt in dBm
+    nvis.Gtx[i]=nvis.gain;
+    nvis.Grx[i]=nvis.gain2;
     nvis.eirp= nvis.power + nvis.gain; // Eirp in dBm
     nvis.Eii[i]=nvis.eirp;
     li= calcFSPL(nvis); 
