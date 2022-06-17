@@ -34,27 +34,38 @@ function selUpdate(nvis) {    // selection has changed
   sel=document.getElementById("selGrx").value; 
   nvis.grxMode=parseInt(sel);
   console.log("selChange() ViewMode="+nvis.viewMode+",grxMode="+nvis.grxMode); 
-  sizeCanvas(nv);   
+  getCanvasSize(nv);   
   nvisPredict(nvis);
   canvasDraw(nvis);
 }
 
-function sizeCanvas(nvis) {
-  var mobl=1;                 // can we work out if device is mobile ?
+function getCanvasSize(nvis) {
+  var s="getCanvasSize() "
+  var canv = document.getElementById("myCanvas");   // find canvas element  
+  nvis.canW = canv.width;
+  nvis.canH = canv.height;                           
+  console.log(s+" w="+nvis.canW+", h="+nvis.canH); 
+}
+
+function setCanvasSize(nvis) {
+  var mobl=0;                 // can we work out if device is mobile ?
   var w=screen.width; 
   var h=screen.height;
   console.log("sizeCanvas(1) Screen=" + w + " x " + h); 
-  if(w > 900  &&  mobl)    w = 900; // mobile device limits
-  if(h > 1100  &&  mobl)    h = 1100;
-  if(w > 2000)    w = 2000; // non-mobile device limits
-  if(h > 2000)    h = 2000;
+  if(!mobl) {      // non mobile device limits
+    if(w > 900 )    w = 900; 
+    if(h > 1100)    h = 1100;
+  }
+  if(w > 2500)    w = 2500; // non-mobile device limits
+  if(h > 2500)    h = 2500;
   console.log("sizeCanvas(2) Canvas=" + w + " x " + h); 
   nvis.canH=h; 
   nvis.canW=w;
 }
 
+
 function canvasDraw(nvis) {     // drawing on canvas
-  var scr = sizeCanvas(nv);
+  var scr = getCanvasSize(nv);
   var canvas = document.getElementById("myCanvas");   // find canvas element                             // Set canvas size
   canvas.width=nvis.canW;  canvas.height=nvis.canH;   // set canvas size
   var ctx = canvas.getContext("2d");                  // get drawing object
@@ -72,6 +83,7 @@ function canvasDraw(nvis) {     // drawing on canvas
 function canvasTable(nvis) {      // drawing table on canvas
   var s1="canvasTable()", s2, s3; // declare few strings
   var x, y;                       // position variables
+  getCanvasSize(nvis);
   var canvas = document.getElementById("myCanvas");   // find canvas element                             // Set canvas size
   var ctx = canvas.getContext("2d");           // get drawing object
   ctx.clearRect(0, 35, nvis.canW, nvis.canH);
@@ -98,19 +110,13 @@ function canvasTable(nvis) {      // drawing table on canvas
     ctx.stroke();
   }
   // Draw header row
-  ctx.font = "25px Arial"; ctx.fillStyle="blue";    ;// select font 
+  ctx.font = "25px Arial"; 
+  if(rowH<30  ||  colW<70) ctx.font = "20px Arial"; 
+  ctx.fillStyle="blue";    ;// select font 
   x=margL+10; y=margT+25;
-  s= "f";    ctx.fillText(s, x, y); x+=colW;
-  s= "Eirp"; ctx.fillText(s, x, y); x+=colW;
-  s= "Grx";  ctx.fillText(s, x, y); x+=colW;
-  s= "Fspl"; ctx.fillText(s, x, y); x+=colW;
-  s= "Drap"; ctx.fillText(s, x, y); x+=colW;
-  s= "Lt";   ctx.fillText(s, x, y); x+=colW;
-  s= "N";    ctx.fillText(s, x, y); x+=colW;
-  s= "SnrM"; ctx.fillText(s, x, y); x+=colW;
-  s= "SnrD"; ctx.fillText(s, x, y); x+=colW;
-  s= "SnrN"; ctx.fillText(s, x, y); x+=colW;
-
+  s3=["f","Eirp","Grx","Fspl", "Drap","Lt","N","SnrM","SnrD","SnrN"];   
+  for(i=0;i<cols; i++) { ctx.fillText(s3[i], x, y); x+=colW;};
+  // Draw data in table cells
   ctx.fillStyle= "black";
   nvis.freq=1.5;
   var inx=0;
@@ -123,8 +129,7 @@ function canvasTable(nvis) {      // drawing table on canvas
     mf = nvis.muf3 * 1.18;
     if(nvis.freq > nvis.muf3) ctx.fillStyle="orange";
     if(nvis.freq > mf) ctx.fillStyle="red";
-    s = nvis.freq.toFixed(1);                     // Frequency field
-    if(nvis.freq > 9.5) s=Math.round(nvis.freq);
+    s = nvis.freq.toFixed(1);   // Frequency field
     ctx.fillText(s, x, y);            
     li =nvis.Eii[inx];          // Eirp field
     s=Math.round(li);  
@@ -157,112 +162,134 @@ function canvasTable(nvis) {      // drawing table on canvas
     if(i>8) { nvis.freq+=0.5; inx++;}   // Indexing 1 MHz
     if(i>14) { nvis.freq+=1.0; inx+=2;} // Indexing 2 MHz
   }  
-  y=margT+rowH*(rows+1)+10;
-  ctx.fillStyle="blue";      // Add text bellow y=820
-  ctx.font = "20px Arial";        // draw text
-  ctx.fillText("Eirp is transmitted signal power at origin in dBm units.", 1, y); y+=30;
-  ctx.fillText("Fspl is signal loss over signal path in dB units (daily maximum).", 1, y); y+=30;
-  ctx.fillText("Drap is signal loss in D layer in dB (daily maximum).", 1, y); y+=30;
-  ctx.fillText("Lt is total signal loss(Fspl+Drap) in dB (daily maximum).", 1, y); y+=30;
-  ctx.fillText("N is noise power at receive location in dBm units, for BW=3kHz.", 1, y); y+=30;
-  ctx.fillText("Snr is ratio of signal S and noise N in dB units.", 1, y); y+=30;
-  ctx.fillText("SnrM/D/N are Snr levels for midday/day/night.", 1, y); y+=30;
-  ctx.fillText("Signal must overcome noise, in order to be received.", 1, y); y+=30;
-  ctx.fillText("Minimum SNR is 10 dB for SSB voice, and 6 dB for data.", 1, y); y+=30;
-
+  // Add text bellow table
+  y=margT+rowH*rows+30;     // position
+  ctx.fillStyle="blue";      ctx.font = "20px Arial";        // font select
+  ctx.fillText("Eirp is transmitted signal power at origin in dBm units.", 1, y); y+=25;
+  ctx.fillText("Fspl is signal loss over signal path in dB units (daily maximum).", 1, y); y+=25;
+  ctx.fillText("Drap is signal loss in D layer in dB (daily maximum).", 1, y); y+=25;
+  ctx.fillText("Lt is total signal loss(Fspl+Drap) in dB (daily maximum).", 1, y); y+=25;
+  ctx.fillText("N is noise power at receive location in dBm units, for BW=3kHz.", 1, y); y+=25;
+  ctx.fillText("Snr is ratio of signal S and noise N in dB units.", 1, y); y+=25;
+  ctx.fillText("SnrM/D/N are Snr levels for midday/day/night.", 1, y); y+=25;
+  ctx.fillText("Signal must overcome noise, in order to be received.", 1, y); y+=25;
+  ctx.fillText("Minimum SNR is 10 dB for SSB voice, and 6 dB for data.", 1, y); y+=25;
 }
 
-function canvasSNR(nvis) {    // drawing on canvas
-  console.log("canvasPlot(1)"); 
+function canvasSNR(nvis) {    // drawing SNR on canvas
+  var s1 ="canvasPlot() ", s2, s3;   // declare few strings
+  var x,y;       // position 
   nvisCheck(nvis);
   var canvas = document.getElementById("myCanvas");  // find canvas element
   var ctx = canvas.getContext("2d");      // get drawing object
-  //ctx.clearRect(0, 45, 00, 1100);
-  ctx.fillStyle = "black";      // set fill style to red color
-  ctx.font = "20px Arial";        // draw text
-  var i,s;
-  s="Signal to noise ratio (SNR) 10 dB/div";  
-  ctx.fillText(s, 400, 45);
-  
+  ctx.clearRect(0, 35, nvis.canW, nvis.canH);
+  // Work out grid dimensions
+  var i, rows=12, cols=15;            //Grid with 12 rows and 15 columns
+  var margL=50, margR=20, margT=30, margB=500;  //Margins - left, right, top,botom,
+  var xDiv=2, yDiv=5;
+  var rowH = Math.round(( nvis.canH - margT- margB )/rows); rowH -= 1;
+  var colW = Math.round((nvis.canW-margL-margR)/cols);   colW -= 1;
+  var xMin,xMax, yMin,yMax;         // grid min max coordinates
+  xMin = margL; xMax = xMin + cols*colW;  // x grid
+  yMin = margT; yMax = yMin + rows*rowH;  // y grid
+
+  s2 = "rows="+rows+", cols="+cols+",w="+colW+",h="+rowH;
+  console.log(s1+s2);
+  ctx.font = "20px Arial";  ctx.fillStyle = "black";   // prepare font
+  // draw horizontal grid lines
+  ctx.strokeStyle="gray";  
+  y=margT;
+  for(i=0; i<(rows+1); i++) {  // Draw horizontal grid lines
+    ctx.beginPath();
+    ctx.moveTo(xMin, y);
+    ctx.lineTo(xMax, y);  
+    ctx.stroke();
+    y += rowH;
+  }
+  // Draw vertical grid lines
+  x=margL; 
+  for(i=0; i<(cols+1); i++) { 
+    ctx.beginPath();
+    ctx.moveTo(x, yMin);
+    ctx.lineTo(x, yMax);
+    ctx.stroke();
+    x+=colW;
+  }
+  // Mark x axes
+  x = margL-10; y = yMax + 20; 
+  for(i=0; i<(cols+1); i++) {     
+    s3=xDiv*i;
+    if(i==cols) { s3="MHz";x-=20;}
+    ctx.fillText(s3, x, y); 
+    x+=colW;
+  }  
+  // Mark y axes
+  x = margL - 25;   y = yMax - rowH +5;
+  for(i=1; i<rows; i++) { 
+    s = yDiv*i;
+    ctx.fillText(s, x, y);
+    y -= rowH;
+  }
+  // Draw plot title 
+  s3="Signal to noise ratio (SNR) 10 dB/div";  
+  ctx.fillText(s3, nvis.canW/2, margT+25);
   // Plot SNR data
-  // Canvas x=0 to 900 => frequency =0 to 30  => x= 30 * frequency
-  // Canvas y=45 to 525 => SNR 0 to 60  => x = 525 - SNR * 8
-  var sg, x, y, dx1=56, dx2=14, dx3=35;
-  //ctx.clearRect(1, 45, 890, 1000);
-  ctx.lineWidth=1;
-  ctx.beginPath();
-  //ctx.rect(1, 25, 900, 510);
-  ctx.strokeStyle="black"; ctx.stroke();
-
-  for(i=0; i<16; i++) { // Draw 2 MHz lines
-    ctx.beginPath();
-    ctx.moveTo(dx1*i+dx3, 25);
-    ctx.lineTo(dx1*i+dx3, 505);
-    ctx.strokeStyle="yellow"; ctx.stroke();
-  } 
-  ctx.fillStyle="black"; // Number 2 MHz lines
-  for(i=1; i<16; i++) { 
-    s = 2*i;
-    if(i==15) { s="MHz"; ctx.fillText(s, dx1*i+dx3-20, 550);}
-    else  ctx.fillText(s, dx1*i+dx3-10, 530);
-  }
-
-  for(i=0; i<7; i++) { // Draw 10 dB SNR lines
-    ctx.beginPath();
-    ctx.moveTo(dx3, 25+80*i);
-    ctx.lineTo(15*dx1+dx3, 25+80*i);
-    ctx.strokeStyle="yellow"; ctx.stroke();
-  }
-  ctx.fillStyle="black"; // Number 10 dB SNR lines
-  for(i=0; i<6; i++) { 
-    s = Math.round (10*i);
-    ctx.fillText(s, 5, 515-80*i);
-  }
-
   ctx.lineWidth=2;
   ctx.beginPath();     // Plot SNR midday data 
-  x=3*dx2+dx3; y=505;
-  ctx.moveTo(x,y);  
+  var fr=1.5;
+  x = xMin + fr * colW / xDiv;  
+  ctx.moveTo(x, yMax);
   for ( i=0; i<58; i++) {   
     sg = nvis.snrM[i];
     if(sg<0.0)  sg=0.0;
-    if(sg>60)  sg=50;
-    y=Math.round(505 - 8*sg);
+    if(sg>60)   sg=60;
+    y = sg * rowH / yDiv;  
+    y=Math.round(yMax-y);
+    x = fr * colW / xDiv;  
+    x=Math.round(xMin+x);
     ctx.lineTo(x,y);  
-    x+=dx2;  // f += 0.5
+    fr += 0.5;
   }
   ctx.strokeStyle = "red"; ctx.stroke();
-  ctx.fillStyle="red"; ctx.fillText("Midday", 5, 45); 
-
-  ctx.beginPath();      // Plot SNR day data
-  x=3*dx2+dx3; y=505;
-  ctx.moveTo(x,y);  
-  for ( i=0; i<58; i++) {    
+  ctx.fillStyle="red"; ctx.fillText("Midday", xMin+5, yMin+25);
+  // Plot SNR day data 
+  ctx.beginPath();      
+  fr=1.5;
+  x = xMin + fr * colW / xDiv;  
+  ctx.moveTo(x, yMax);
+  for ( i=0; i<58; i++) {   
     sg = nvis.snrD[i];
     if(sg<0.0)  sg=0.0;
-    if(sg>60)  sg=60;
-    y=Math.round(505 - 8*sg);  
+    if(sg>60)   sg=60;
+    y = sg * rowH / yDiv;  
+    y=Math.round(yMax-y);
+    x = fr * colW / xDiv;  
+    x=Math.round(xMin+x);
     ctx.lineTo(x,y);  
-    x+=dx2;
+    fr += 0.5;
   }
   ctx.strokeStyle = "green"; ctx.stroke();
-  ctx.fillStyle="green"; ctx.fillText("Day", 120, 45); 
-
-  ctx.beginPath();    // Plot SNR night data
-  x=3*dx2+dx3; y=505;
-  ctx.moveTo(x,y);  
-  for ( i=0; i<58; i++) {     
+  ctx.fillStyle="green"; ctx.fillText("Day", xMin+80, yMin+25);
+  // Plot SNR Night data
+  ctx.beginPath();      
+  fr=1.5;
+  x = xMin + fr * colW / xDiv;  
+  ctx.moveTo(x, yMax);
+  for ( i=0; i<58; i++) {   
     sg = nvis.snrN[i];
     if(sg<0.0)  sg=0.0;
-    if(sg>60)  sg=60;
-    y=Math.round(505 - 8*sg);  
+    if(sg>60)   sg=60;
+    y = sg * rowH / yDiv;  
+    y=Math.round(yMax-y);
+    x = fr * colW / xDiv;  
+    x=Math.round(xMin+x);
     ctx.lineTo(x,y);  
-    x+=dx2; 
+    fr += 0.5;
   }
-  ctx.strokeStyle="blue"; ctx.stroke();
-  ctx.fillStyle="blue"; ctx.fillText("Night", 200, 45); 
+  ctx.strokeStyle = "blue"; ctx.stroke();
+  ctx.fillStyle="blue"; ctx.fillText("Night", xMin+140, yMin+25);
   // Add text bellow y=550
-  ctx.fillStyle="blue";      y=560;  
+  ctx.fillStyle="blue";      y=yMax+50;  
   ctx.fillText("Graph shows SNR levels for midday, day and night.", 1, y); y+=30;
   ctx.fillText("SNR is ratio of signal S and noise N in decibel (dB) units.", 1, y); y+=30;
   ctx.fillText("Graph shows SNR levels for midday, day and night.", 1, y); y+=30;
@@ -275,6 +302,7 @@ function canvasSNR(nvis) {    // drawing on canvas
   ctx.fillStyle = "blue";
   ctx.fillText("Good NVIS frequencies are 4-8 MHz for day, and 2-4 MHz for night.", 1, y); y+=30;
   ctx.fillText("Good long range frequencies are 10-30 MHz for day, and 6-14 MHz for night.", 1, y); y+=30;
+
 }
 
 function canvasSkip(nvis) {    // drawing skip on canvas
@@ -304,7 +332,7 @@ function canvasSkip(nvis) {    // drawing skip on canvas
     ctx.beginPath();
     ctx.moveTo(60*i, 45);
     ctx.lineTo(60*i, 525);
-    ctx.strokeStyle="yellow"; ctx.stroke();
+    ctx.strokeStyle="gray"; ctx.stroke();
   } 
   ctx.fillStyle="black"; // Number 2 MHz lines
   for(i=1; i<15; i++) { 
@@ -317,7 +345,7 @@ function canvasSkip(nvis) {    // drawing skip on canvas
     ctx.beginPath();
     ctx.moveTo(1, 45+48*i);
     ctx.lineTo(898, 45+48*i);
-    ctx.strokeStyle="yellow"; ctx.stroke(); // y= 500 to 45
+    ctx.strokeStyle="gray"; ctx.stroke(); // y= 500 to 45
   }
   ctx.fillStyle="black"; // Number 500 km lines
   for(i=1; i<10; i++) { 
