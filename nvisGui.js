@@ -54,8 +54,8 @@ function selUpdate(nvis) {    // selection has changed
 function plotDraw(nvis) {
   if(nvis.viewMode==1)  plotTable(nvis);
   if(nvis.viewMode==2)  plotSNR(nvis);
-  if(nvis.viewMode==3)  canvasSkip(nvis);
-  if(nvis.viewMode==4)  canvasSlm(nvis);
+  if(nvis.viewMode==3)  plotSkip(nvis);
+  if(nvis.viewMode==4)  plotSLM(nvis);
 }
 
 function canvasDraw(nvis) {    // drawing on canvas
@@ -81,6 +81,7 @@ function plotTable(nvis) {
 	console.log("Plotting table...")
 	console.log(nvis)
 	table = document.getElementById("plotTable")
+	table.innerHTML = ""
 	row = table.insertRow(0)
 	row.style.fontWeight = 600
 	row.insertCell(0).innerHTML = "f"
@@ -94,13 +95,13 @@ function plotTable(nvis) {
 	row.insertCell(8).innerHTML = "SnrN"
 
 	for ( i=0; i<nvis.Eii.length; i++) {
-    		row = table.insertRow(i+1);
+    row = table.insertRow(i+1);
 		f = 1.5 + i*0.5; // Indexing 1 MHz 
-    		//if(i>8) { f = 8 + (i-11)*1; } // Don't do this
+    //if(i>8) { f = 8 + (i-11)*1; } // Don't do this
 		if (i>8 && i%2==0 ) {continue;} // Do this
 		row.insertCell(0).innerHTML = f  // f
 		if(f > nvis.muf3) { row.classList.add("warn") }; // Sets whole row
-    		if(f > nvis.muf3 * 1.18) { row.classList.add("alert") };  // Sets whole row
+    if(f > nvis.muf3 * 1.18) { row.classList.add("alert") };  // Sets whole row
 		row.insertCell(1).innerHTML = Math.round(nvis.Eii[i]) // EIRP
 		row.insertCell(2).innerHTML = Math.round(nvis.Lii[i]) // FSLP
 		row.insertCell(3).innerHTML = Math.round(nvis.Ldd[i]) // DRAP
@@ -111,7 +112,16 @@ function plotTable(nvis) {
 		if(f > nvis.muf3*1.01) { row.cells[7].classList.add("alert") };
 		row.insertCell(8).innerHTML = Math.round(nvis.snrN[i]) // SnrN
 		if(f > nvis.muf1*1.18) { row.cells[8].classList.add("alert") };
-  	}  
+  }  
+	document.getElementById("tooltip").innerHTML = `Eirp is transmitted signal power at origin in dBm units.
+	  <br>Fspl is signal loss over signal path in dB units (daily maximum).
+	  <br>Drap is signal loss in D layer in dB (daily maximum).
+	  <br>Lt is total signal loss(Fspl+Drap) in dB (daily maximum).
+	  <br>N is noise power at receive location in dBm units, for BW=3kHz.
+	  <br>Snr is ratio of signal S and noise N in dB units.
+	  <br>SnrM/D/N are Snr levels for midday/day/night.
+	  <br>Signal must overcome noise, in order to be received.
+	  <br>Minimum SNR is 10 dB for SSB voice, and 6 dB for data.`
 }
 
 function canvasTable(nvis) {    // drawing on canvas
@@ -202,18 +212,18 @@ function canvasTable(nvis) {    // drawing on canvas
 
 function plotSNR(nvis) {
 	console.log("Plotting SNR...")
-	farr = [0]
-	snrD = [0]
-	snrM = [0]
-	snrN = [0]
-	for ( i=0; i<nvis.Eii.length; i++) {
-		f = 1.5 + i*0.5; // Indexing 1 MHz 
+	var farr = [0]
+	var snrD = [0]
+	var snrM = [0]
+	var snrN = [0]
+	for (var i=0; i<nvis.Eii.length; i++) {
+		var f = 1.5 + i*0.5; // Indexing 1 MHz 
 		farr.push(f);
 		// Cap at 0
 		if (nvis.snrD[i] < 0) { snrD.push(0) } else { snrD.push(nvis.snrD[i]) }
 		if (nvis.snrM[i] < 0) { snrM.push(0) } else { snrM.push(nvis.snrM[i]) }
 		if (nvis.snrN[i] < 0) { snrN.push(0) } else { snrN.push(nvis.snrN[i]) }
-  	}  
+  }  
 
 	console.log("HERE WE GO")
 	console.log(f)
@@ -227,7 +237,7 @@ function plotSNR(nvis) {
 		type: 'scatter',
 		name: "Day",
  		line: {color: '#43228f',  width: 2}
-	    };
+	};
 
 	var snrMSeries = {
 		x: farr, 
@@ -239,7 +249,7 @@ function plotSNR(nvis) {
 		type: 'scatter',
 		name: "Midday",
 	};
-	
+
 	var snrNSeries = {
 		x: farr, 
 		y: snrN, 
@@ -253,11 +263,14 @@ function plotSNR(nvis) {
 
 	// Generic data for table
 	var layout = {
+    autosize: true,
 		xaxis: {
-			range: [ 0, 26 ]
+			range: [ 0, 26 ],
+			title: { text: "MHz" }
 		},
 		yaxis: {
-			range: [0, 60]
+			range: [0, 60],
+			title: { text: "%" }
 		},
 		legend: {
 			y: 0.5,
@@ -268,7 +281,7 @@ function plotSNR(nvis) {
 				color: 'black',
 			}
 		},
-		title:'SNR Plot'
+		title:'Signal to Noise Ratio 10 dB/div'
 	};
 	var config = {
 		displayModeBar: false,
@@ -276,7 +289,15 @@ function plotSNR(nvis) {
 	}
 	var data = [ snrDSeries, snrMSeries, snrNSeries ];
 	Plotly.newPlot('SNRPlot', data, layout,  config);
-	//document.getElementById("tooltip").innerHTML = "Eirp is transmitted signal power at origin in dBm units.<br>Fspl is signal loss over signal path in dB units (daily maximum).<br>Drap is signal loss in D layer in dB (daily maximum).<br>Lt is total signal loss(Fspl+Drap) in dB (daily maximum).<br>N is noise power at receive location in dBm units, for BW=3kHz.<br>Snr is ratio of signal S and noise N in dB units.<br>"SnrM/D/N are Snr levels for midday/day/night.<br>Signal must overcome noise, in order to be received.<br>Minimum SNR is 10 dB for SSB voice, and 6 dB for data.<br>"
+	document.getElementById("tooltip").innerHTML = `Eirp is transmitted signal power at origin in dBm units.
+	  <br>Fspl is signal loss over signal path in dB units (daily maximum).
+	  <br>Drap is signal loss in D layer in dB (daily maximum).
+	  <br>Lt is total signal loss(Fspl+Drap) in dB (daily maximum).
+	  <br>N is noise power at receive location in dBm units, for BW=3kHz.
+	  <br>Snr is ratio of signal S and noise N in dB units.
+	  <br>SnrM/D/N are Snr levels for midday/day/night.
+	  <br>Signal must overcome noise, in order to be received.
+	  <br>Minimum SNR is 10 dB for SSB voice, and 6 dB for data.`
 }
 
 function canvasPlot(nvis) {    // drawing on canvas
@@ -290,7 +311,7 @@ function canvasPlot(nvis) {    // drawing on canvas
   var i,s;
   s="SNR 10 dB/div";  
   ctx.fillText(s, 750, 65);
-  
+
   // Plot SNR data
   // Canvas x=0 to 900 => frequency =0 to 30  => x= 30 * frequency
   // Canvas y=45 to 525 => SNR 0 to 60  => x = 525 - SNR * 8
@@ -379,6 +400,162 @@ function canvasPlot(nvis) {    // drawing on canvas
   ctx.fillText("SnrM/D/N are Snr levels for midday/day/night.", 1, y); y+=30;
   ctx.fillText("Signal must overcome noise, in order to be received.", 1, y); y+=30;
   ctx.fillText("Minimum SNR is 10 dB for SSB voice, and 6 dB for data.", 1, y); y+=30;
+}
+
+function plotSkip(nvis) {
+	console.log("Plotting Skip...")
+	var skipX = []
+	var skipD = []
+	var skipM = []
+	var skipN = []
+
+  // SkipM Calculation
+  // Note: I'm not sure how 30 was originally chosen for x. Set to 1 for no particular reason.
+  var x=1; var y=700; var fr=1.5; var started = false;
+  for (var i=0; i<500; i++) {   // loop HF frequencies
+    var skdi=0.0; var skslm=1.0;   // assume no skip zone
+    var frrat = fr/nvis.fc3;    // ratio of frequency and critical foF2
+    if(frrat > 1.05) {      // if over => we have skip
+      for (var el=0; el<90; el++) { // loop over elevation angles
+        skslm = nvis.skipSlm[el];
+        if(skslm>frrat) skdi=nvis.skipDist[el];
+      }
+    }
+    // Finding graph size limit
+    if (skdi > 0) {
+      started = true;
+      console.log("Started is true")
+    }
+    if (started && skdi <= 0) {
+      console.log("LIMIT HIT")
+      var limit = i+20;
+      for (var j=0;j<20;j++) {skipM.push(0);x+=5/30;skipX.push(x)}
+      break;
+    }
+
+    if(skdi<0.0)  skdi=0.0;
+    if(skdi>5000.0)  skdi=5000.0;
+    // y=Math.round(525 - skdi*0.096);
+    skipM.push(skdi)
+    skipX.push(x)
+    // No idea why 5/30
+    x += 5/30;
+    fr += 0.166667;
+  }
+
+  // SkipD Calculation
+  x=1; y=700; fr=1.5;
+  for ( i=0; i<limit; i++) {   // loop HF frequencies
+    skdi=0.0; skslm=1.0;   // assume no skip zone
+    frrat = fr/nvis.fc2;    // ratio of frequency and critical foF2
+    if(frrat > 1.01) {      // if over => we have skip
+      for (el=0; el<90; el++) { // loop over elevation angles
+        skslm = nvis.skipSlm[el];
+        if(skslm>frrat) skdi=nvis.skipDist[el];
+      }
+    }
+    if(skdi<0.0)  skdi=0.0;
+    if(skdi>5000.0)  skdi=5000.0;
+    // y=Math.round(525 - skdi * 0.096);   // 5000 km into 480 pixels
+    skipD.push(skdi)
+    x+=5/30;
+    fr+= 0.16666667;
+  }
+
+  // SkipN Calculation
+  x=1; y=700; fr=1.5;
+  for ( i=0; i<limit; i++) {   // loop HF frequencies
+    skdi=0.0; skslm=1.0;   // assume no skip zone
+    frrat = fr/nvis.fc1;    // ratio of frequency and critical foF2
+    if(frrat > 1.05) {      // if over => we have skip
+      for (el=0; el<90; el++) { // loop over elevation angles
+        skslm = nvis.skipSlm[el];
+        if(skslm>frrat) skdi=nvis.skipDist[el];
+      }
+    }
+    if(skdi<0.0)  skdi=0.0;
+    if(skdi>5000.0)  skdi=5000.0;
+    skipN.push(skdi)
+    x+=5/30;
+    fr+= 0.1666667;
+  }
+
+  skipX = skipX.slice(0, limit)
+  skipD = skipD.slice(0, limit)
+  skipM = skipM.slice(0, limit)
+  skipN = skipN.slice(0, limit)
+
+
+	var skipDSeries = {
+		x: skipX,
+		y: skipD,
+		textfont: {family: 'Times New Roman'},
+		textposition: 'bottom center',
+		marker: {size: 12},
+		mode: 'lines',
+		type: 'scatter',
+		name: "Day",
+ 		line: {color: '#43228f',  width: 2}
+	};
+
+	var skipMSeries = {
+		x: skipX, 
+		y: skipM, 
+		textfont: {family: 'Times New Roman'},
+		textposition: 'bottom center',
+		marker: {size: 12},
+		mode: 'lines',
+		type: 'scatter',
+		name: "Midday",
+	};
+
+	var skipNSeries = {
+		x: skipX,
+		y: skipN,
+		textfont: {family: 'Times New Roman'},
+		textposition: 'bottom center',
+		marker: {size: 12},
+		mode: 'lines',
+		type: 'scatter',
+		name: "Night",
+	};
+	//
+	// Generic data for table
+	var layout = {
+    autosize: true,
+		xaxis: {
+			// range: [ 0, 26 ],
+			title: { text: "MHz" }
+		},
+		yaxis: {
+			// range: [0, 60],
+			title: { text: "km" }
+		},
+		legend: {
+			y: 0.5,
+			yref: 'paper',
+			font: {
+				family: 'Arial, sans-serif',
+				size: 20,
+				color: 'black',
+			}
+		},
+		title:'Skip Zone 500km/div'
+	};
+	var config = {
+		displayModeBar: false,
+		responsive: true
+	}
+	var data = [skipDSeries, skipMSeries, skipNSeries];
+	Plotly.newPlot('SNRPlot', data, layout,  config);
+	document.getElementById("tooltip").innerHTML = `Graph shows skip zone for day, midday and night.<br>Skip zone is zone around transmiter without signal coverage.
+<br>Skip zone is big problem for NVIS use, but OK for SkyWave.</p>
+<p style="color: red;">If we use frequency below critical foF2, there will be no skip zone.
+<br>Using frequency over critical creates skip zone with no coverage.
+<br>Higher the frequency, larger the skip zone (up to 5,000 km).</p>
+Frequencies above 10 MHz are used for long distance (1,000 to 30,000 km).
+<br>Low frequencies are used for 0 to 500 km.
+<br>Good NVIS freqs are 2-4 MHz during night, and 4-8 MHz during day.`
 }
 
 function canvasSkip(nvis) {    // drawing skip on canvas
@@ -507,6 +684,109 @@ function canvasSkip(nvis) {    // drawing skip on canvas
   ctx.fillText("Good NVIS freqs are 2-4 MHz during night, and 4-8 MHz during day.", 1, y); y+=30;  
 }
 
+function plotSLM(nvis) {
+	console.log("Plotting SLM...")
+	var slmX = []
+	var SLM = []
+	var slmB = []
+
+  // Calculate SLM
+  var x=1;
+  for (var el=0; el<90; el++) {   // loop elevation
+    var skslm = nvis.skipSlm[el];
+    if(skslm<1.0)  skslm=1.0;
+    if(skslm>9.0)  skslm=9.0;
+    // var y=Math.round(525 - skslm*96);
+    SLM.push(skslm)
+    slmX.push(x)
+    x+=1;
+  }
+
+  // Calculate B
+  var B;
+  var x = 1;
+  for (el=0; el<90; el++) {   // loop elevation
+    B = nvis.skipB[el];
+    if(B<0)  B=0;
+    if(B>90.0)  B=90.0;
+    //console.log("DrawSLM  El="+el+", B="+B);
+    // y=Math.round(525 - B*4.8);
+    slmB.push(B)
+    x+=1;
+  }
+
+	var slmSeries = {
+		x: slmX,
+		y: SLM,
+		textfont: {family: 'Times New Roman'},
+		textposition: 'bottom center',
+		marker: {size: 12},
+		mode: 'lines',
+		type: 'scatter',
+		name: "Day",
+ 		line: {color: '#43228f',  width: 2},
+		yaxis: 'y2'
+	};
+
+	var slmBSeries = {
+		x: slmX,
+		y: slmB,
+		textfont: {family: 'Times New Roman'},
+		textposition: 'bottom center',
+		marker: {size: 12},
+		mode: 'lines',
+		type: 'scatter',
+		name: "Midday",
+	};
+
+	// Generic data for table
+	var layout = {
+    autosize: true,
+		xaxis: {
+			// range: [ 0, 26 ],
+			title: { text: "EL\xB0" }
+		},
+		yaxis: {
+			range: [0, 100],
+			ticksuffix: "\xB0"
+		},
+		yaxis2: {
+		  range: [0, 5],
+		  title: 'SLM',
+		  overlaying: 'y',
+      side: 'right'
+		},
+		legend: {
+			y: 1,
+			yref: 'paper',
+			font: {
+				family: 'Arial, sans-serif',
+				size: 20,
+				color: 'black',
+			}
+		},
+		title:'Secant Law Multiplier'
+	};
+	var config = {
+		displayModeBar: false,
+		responsive: true
+	}
+	var data = [slmSeries, slmBSeries];
+	Plotly.newPlot('SNRPlot', data, layout,  config);
+	document.getElementById("tooltip").innerHTML = `Critical frequency is the highest frequency Ionosphere will reflect back.
+<br>Frequencies above critical will pass through Ionosphere without reflection.
+<br>foF2 is critical frequency for layer F2 at vertical wave incidence.
+<br>F2 will reflect vertical wave if frequency is not over foF2.
+<br>Waves entering F2 layer at lower angles will have higher critical frequency fc.
+<br>red
+<br>This relationship is called Secant Law => fc = foF2 * sec (B).
+<br>Wave is sent at elevation angle EL (horizon is 0, up is 90 degrees).
+<br>Wave enters F2 layer at angle B (perpendicular is 90 degrees).
+<br>blue
+<br>Secant Law Multiplier SLM increases critical frequency by factor of 1 to 6.
+<br>For wave entering F2 at 30 degrees critical frequency fc = 2 * foF2.`
+}
+
 function canvasSlm(nvis) {    // drawing Secant law multiplier
   console.log("canvasSlm(1)"); 
   //nvisCheck(nvis);
@@ -557,7 +837,7 @@ function canvasSlm(nvis) {    // drawing Secant law multiplier
     s = (10*i)+s2; ctx.fillText(s, 5, 535-48*i);
     s = (0.5*i).toFixed(1); ctx.fillText(s, 870, 535-48*i);
   }
-  
+
   ctx.lineWidth=2;
   ctx.beginPath();    // Plot SLM
   ctx.moveTo(90, 525);
@@ -589,7 +869,7 @@ function canvasSlm(nvis) {    // drawing Secant law multiplier
   }
   ctx.strokeStyle = "green"; ctx.stroke();
   ctx.fillStyle="green"; ctx.fillText("B", 5, 65);
- 
+
   // Add text bellow y=600
   ctx.fillStyle="blue";      y=600; 
   ctx.fillText("Critical frequency is the highest frequency Ionosphere will reflect back.", 1, y); y+=30;
@@ -616,6 +896,6 @@ function canvasSlm(nvis) {    // drawing Secant law multiplier
 
 
 
- 
 
- 
+
+
