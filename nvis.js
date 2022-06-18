@@ -48,7 +48,7 @@ function nvisInit(nvis) {
     nvis.Gtx[i] = -40.0;  nvis.Grx[i]=-40.0;      
   }
   for(i=0; i<92; i++) {
-    nvis.skipDist[i]=0;  nvis.skipSlm[i]=1.0; nvis.skipB[i]=30;
+    nvis.skipDist[i]=0;  nvis.skipSlm[i]=1.0; nvis.skipB[i]=0.0;
   }  
   console.log("nvisInit() id="+nvis.id+",code="+nvis.code+", len=" + nvis.skipSlm.length);
   return nvis;
@@ -271,7 +271,7 @@ function caclSkip(nvis) {    // save skip and slm for each degree elev (0 to 90)
   var el, v1, v2, di;        
   var a, b=6371, c, A, B,C;     // Triangle
   c= b + nvis.hF2;              // sides b and c are known , angle C will loop
-  for(el=0; el<90; el++) {      // wave elevation angle (horizon=0)
+  for(el=0; el<91; el++) {      // wave elevation angle (horizon=0)
     C = 90 + el;  
     C  =D2R(C);
     v1 = (b / c) * Math.sin(C);   // sinus rule: b/c = sinB/sinC => sinB= (b/c) *sinC
