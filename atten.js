@@ -25,17 +25,19 @@ function calcFSPL(nvis) {   // FSPL = free space path loss
   return (li1 + li2 + li3);
 }
 
-function calcDrap(nvis) {    // predicting DRAP at 2.2 MHz
+function calcDrap(nvis) {   // calculate D region absorption 
+  // predicting DRAP at 2.2 MHz
   var ls = sunLat(nvis) - nvis.lat; // sun angle from normal at noon
   var ld = Math.cos(ls * 3.1414 / 180);  
   var ld2 = 30 + 25 * ld; 
   var a = nvis.pathdist / (2 * nvis.hF2); 
-  var ld3 = ld2 * a;
+  var ld3 = ld2 * a;    // DRAP at 2.2 MHz
   //console.log("calcDrap(1) ls=" +ls + ", ld=" + ld.toFixed(0) + ", ld2=" + ld2.toFixed(0));
-  var n = 2.2 / nvis.freq;    // freq ratio with 2.2 MHz
-  var n2 = Math.pow(n, 1.5);  // ratio to power of 1.5  
-  ld3 *= n2;                  // frequency correction
-  var ld4 = ld3 * nvis.hops;            // hops correction
+  // Frequency correction
+  var n = 2.2 / nvis.freq;      // freq ratio with 2.2 MHz
+  var n2 = Math.pow(n, 1.5);    // ratio to power of 1.5  
+  ld3 *= n2;                    // frequency correction
+  var ld4 = ld3 * nvis.hops;    // multihop link DRAP correction
   //console.log("calcDrap(2) a=" + a.toFixed(0) + ", ld3=" + ld3.toFixed(0) + ",'ld4=" + ld4.toFixed(0));
   return ld4;
 }
