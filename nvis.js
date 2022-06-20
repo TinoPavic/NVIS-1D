@@ -300,3 +300,4 @@ function nvisPredict (nvis) {
   caclSkip(nvis);     // calc skip zone, SLM and angle B
   calcSNR(nvis);      // calc SNR for night, day and midday
 }
+

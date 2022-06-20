@@ -1,0 +1,162 @@
+body {
+		font-family: arial;
+}
+h1 {
+    margin-left: 5%;
+    margin-bottom: -30px;
+}
+
+.myDiv {
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: lightgray;    
+    text-align: left;
+    width: 20%;
+    padding: 10px;
+    margin-left: 5%;
+    font-size: 2vh;
+		top: 50%;
+		position: absolute;
+		transform: translateY(-50%);
+}
+
+.plotsDiv {
+		top: 50%;
+		position: absolute;
+		transform: translateY(-50%);
+		width: 65%;
+		left: 30%;
+		max-height: 80%;
+		display: flex;
+    flex-direction: column;
+}
+
+#help {
+    right: 5%;
+    position: absolute;
+    top: 25px;
+}
+
+.heading {
+    padding-left: 2px;
+    font-weight: bold;
+    margin-bottom: 0.2vw;
+    margin-top: 1vh;
+    font-size: 3vh;
+}
+
+.flex-options {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.flex-options div {
+    flex-grow: 1;
+    padding: 2px;
+}
+
+.flex-options p {
+    margin: 0px;
+}
+
+.flex-options select {
+    font-size: 3vh;
+    width: 100%;
+}
+
+#selAct {
+		position: absolute;
+		top: 5%;
+		right: 72.4%;
+}
+
+.plotTableDiv {
+		overflow-x: auto;
+		margin: auto;
+		width: fit-content;
+		display: none;
+		height: 100%;
+}
+#plotTable {
+		text-align: right;
+ 		border-collapse: collapse;
+		font-size: 19px;
+
+}
+
+#plotTable td {
+		padding: 5px;
+		border: 1px solid;
+}
+
+.warn {
+		color: orange;
+}
+.alert {
+		color: red;
+}
+
+#tooltipi {
+    border: 1px solid black;
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    text-align: center;
+    font-family: Times New Roman;
+    margin-left: 80%;
+    z-index: 2;
+    position: absolute;
+}
+#tooltip {
+		border: 2px solid black;
+		border-radius: 5px;
+		width: fit-content;
+		height: fit-content;
+		margin: auto;
+  	position: absolute;
+  	top: 0; left: 0; bottom: 0; right: 0;
+		background: white;
+		padding: 3%;
+		text-align: center;
+		z-index: 1;
+		display: none;
+		font-size: 25px;
+}
+#tooltipi:hover + #tooltip {
+    display: block;    
+}
+
+
+
+
+
+
+
+
+/* Mobile Version */
+@media (max-width: 750px) {
+    h1 {
+        margin-left: 1%;
+    }
+
+    .myDiv {
+        margin-left: 1%;
+    }
+
+    .flex-options div {
+        flex-basis: 30%;
+    }
+
+    .flex-options p {
+        font-size: 3vw;
+    }
+
+    .flex-options select {
+        font-size: 5vw;
+    }
+
+    .flex-options-4 div {
+        flex-basis: 40%;
+    }
+}
