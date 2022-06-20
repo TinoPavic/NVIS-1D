@@ -80,23 +80,18 @@ function canvasDraw(nvis) {    // drawing on canvas
 function plotTable(nvis) {
 	console.log("Plotting table...")
 	console.log(nvis)
-	table = document.getElementById("plotTable")
+	let table = document.getElementById("plotTable")
 	table.innerHTML = ""
-	row = table.insertRow(0)
+	let row = table.insertRow(0)
 	row.style.fontWeight = 600
-	row.insertCell(0).innerHTML = "f"
-	row.insertCell(1).innerHTML = "Eirp"
-	row.insertCell(2).innerHTML = "Fspl"
-	row.insertCell(3).innerHTML = "Drap"
-	row.insertCell(4).innerHTML = "Lt"
-	row.insertCell(5).innerHTML = "N"
-	row.insertCell(6).innerHTML = "SnrM"
-	row.insertCell(7).innerHTML = "SnrD"
-	row.insertCell(8).innerHTML = "SnrN"
+  let rows = ["f", "Eirp", "Grx", "Fspl", "Drap", "Lt", "N", "SnrM", "SnrD", "SnrN"]
+  for (let i=0; i<rows.length;i++) {
+    row.insertCell(i).innerHTML = rows[i]
+  }
 
-	for ( i=0; i<nvis.Eii.length; i++) {
+	for (let i=0; i<nvis.Eii.length; i++) {
     row = table.insertRow(i+1);
-		f = 1.5 + i*0.5; // Indexing 1 MHz 
+		let f = 1.5 + i*0.5; // Indexing 1 MHz 
     //if(i>8) { f = 8 + (i-11)*1; } // Don't do this
 		if (i>8 && i%2==0 ) {continue;} // Do this
 		row.insertCell(0).innerHTML = f  // f
@@ -885,17 +880,3 @@ function canvasSlm(nvis) {    // drawing Secant law multiplier
   ctx.fillText("Secant Law Multiplier SLM increases critical frequency by factor of 1 to 6.", 1, y); y+=30; 
   ctx.fillText("For wave entering F2 at 30 degrees critical frequency fc = 2 * foF2.", 1, y); y+=30; 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
