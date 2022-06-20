@@ -1,3 +1,6 @@
+// Functions for determining gain of different antenna types
+// Precalculated 3D radiation pattern for antenna is given in array g
+// Interpolation of 3D pattern data is done by function antennaInterpolate()
 
 function antennaCasgA2(fr, h, el) {  // CASG-A2 pattern
   var s="antCasgA2() ";
@@ -111,11 +114,12 @@ function antennaRf1944(fr, h, el) {    // PMV Bent Whip pattern
   return antennaInterpolate(fr, h, el, f, e, g, ga);
 }
 
-function antennaDipole(fr, h, el) {    // Inv Vee on 6 m mast
-  if(h <  4.5)  return antennaDipole1(fr, h, el);
+// Dipole has 5 distinct patterns , based on ratio height / wavelength
+function antennaDipole(fr, h, el) {    
+  if(h <  4.5)  return antennaDipole1(fr, h, el);  // Low dipole pattern
   if(h <  9)    return antennaDipole2(fr, h, el);
   if(h <  15)   return antennaDipole3(fr, h, el);
-  if(h < 21)    return antennaDipole4(fr, h, el);
+  if(h < 21)    return antennaDipole4(fr, h, el);  // High dipole pattern
   return antennaDipole5(fr, h, el);
 }
 
@@ -224,6 +228,7 @@ function antennaDipole5(fr, h, el) {    // Inv Vee on 26 m mast
   return antennaInterpolate(fr, h, el, f, e, g, ga);
 }
 
+// Interpolation of antenna pattern for frequency, elevation and height
 function antennaInterpolate(fr, h, el, f, e, g, gavg) {
   // fr = operating frequency link uses in MHz
   // h = antenna height in m 

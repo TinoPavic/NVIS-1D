@@ -214,7 +214,7 @@ function showfoF2(nvis) {
   var s;
   s = "foF2: "+nvis.fc1.toFixed(1)+", "+nvis.fc2.toFixed(1);
   s += ", "+nvis.fc3.toFixed(1);
-  s += ", SSN=" + nvis.ssn.toFixed(0)+", SLM=" + nvis.slm.toFixed(2);
+  s += ", SSN:" + nvis.ssn.toFixed(0)+", SLM:" + nvis.slm.toFixed(2);
   return s;
 }
 
@@ -222,11 +222,11 @@ function showMuf(nvis) {
   var s1 = "FOT: " + nvis.muf1.toFixed(1);
   s1 += ", " + nvis.muf2.toFixed(1);
   s1 += ", " + nvis.muf3.toFixed(1);
-  s1 += ",    Hops=" + nvis.hops;
+  s1 += ", Hop:" + nvis.hops;
   var s2 = '\xB0';
-  s1 += ", El=" + nvis.elev.toFixed(1) + s2;
+  s1 += ", El:" + nvis.elev.toFixed(1) + s2;
   var c = R2D(nvis.B);
-  s1 += ", B=" + c.toFixed(1) + s2;
+  s1 += ", B:" + c.toFixed(1) + s2;
   return s1;  
 }
 
@@ -269,32 +269,34 @@ function calcSNR(nvis) {    // frequency scan
 // Use hF2 and loop elevation angle C => calculate SLM and skip distance
 function caclSkip(nvis) {    // save skip and slm for each degree elev (0 to 90)
   var el, v1, v2, di;        
-  var a, b=6371, c, A, B,C;     // Triangle
-  c= b + nvis.hF2;              // sides b and c are known , angle C will loop
-  for(el=0; el<91; el++) {      // wave elevation angle (horizon=0)
-    C = 90 + el;  
-    C  =D2R(C);
+  var a, b=6371, c, A, B,C;       // Triangle with b = Earth radius 
+  c= b + nvis.hF2;                // triangle side c = b+hF2
+  // sides b and c are known , angle C will loop
+  for(el=0; el<91; el++) {        // wave elevation angle (horizon=0)
+    C = 90 + el;                  // triangle angle C for given el
+    C  =D2R(C);                   // angle C in radians
     v1 = (b / c) * Math.sin(C);   // sinus rule: b/c = sinB/sinC => sinB= (b/c) *sinC
     B = Math.asin(v1);            // wave incidence angle into F2 (vertical=normal=0)
-    v2 = 1.0 / Math.cos(B);       // secant law multiplier
-    nvis.skipSlm[el] = v2;        // secant law multiplier
-    nvis.skipB[el] = R2D(B);
-    A = Math.PI - C - B;          // angle A
-    di= 40000.0 * A / Math.PI;
-    nvis.skipDist[el]= di;
+    v2 = 1.0 / Math.cos(B);       // secant law multiplier (SLM)
+    nvis.skipSlm[el] = v2;        // store SLM into array, 1 for every elevation
+    nvis.skipB[el] = R2D(B);      // store angle B in degrees (incident angle into F2 layer)
+    A = Math.PI - C - B;          // angle A from A+B+C=180 degrees
+    di= 40000.0 * A / Math.PI;    // terrestrial distance as arc of great circle
+    nvis.skipDist[el]= di;        // save skip distance into array
     if(el==0)  console.log("calcSkip(" + el + ") Di=" + di.toFixed(0) + " slm=" + v2.toFixed(3)+",B="+R2D(B).toFixed(1));
   }
 }
 
+// Single function does all required data processing
 function nvisPredict (nvis) {
   console.log("nvisPredict(1)");
-  nvisCheck(nvis);
-  maxHop(nvis);
-  calcHops(nvis);    // calc hops and elevation, calls Dist2El()
-  calcCoe(nvis);     // calc cycleCoe, latCoe and seasonCoe
-  calcfoF2(nvis);    // estimate foF2 
-  latestfoF2(nvis);  // latest Ionosonde data mixed with estimate
-  calcMuf(nvis);     // calc MUF from foF2 (add half gyro, mult with SLM)
-  caclSkip(nvis);
-  calcSNR(nvis);
+  nvisCheck(nvis);    // check if class object is OK
+  maxHop(nvis);       // max hop distance
+  calcHops(nvis);     // calc hops and elevation, calls Dist2El()
+  calcCoe(nvis);      // calc cycleCoe, latCoe and seasonCoe
+  calcfoF2(nvis);     // estimate foF2 
+  latestfoF2(nvis);   // latest Ionosonde data mixed with estimate
+  calcMuf(nvis);      // calc MUF from foF2 (add half gyro, mult with SLM)
+  caclSkip(nvis);     // calc skip zone, SLM and angle B
+  calcSNR(nvis);      // calc SNR for night, day and midday
 }

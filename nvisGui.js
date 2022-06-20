@@ -72,7 +72,7 @@ function canvasDraw(nvis) {     // drawing on canvas
   var ctx = canvas.getContext("2d");                  // get drawing object
   ctx.clearRect(0, 0, nvis.canW, nvis.canH);          // clear rectangle
   ctx.font = "23px Arial";        // draw text
-  var s = showfoF2(nvis) + "   " + showMuf(nvis);
+  var s = showfoF2(nvis) + "--" + showMuf(nvis);
   ctx.fillStyle = "blue"; ctx.fillText(s, 1, 20);   
   
   if(nvis.viewMode==1)  canvasTable(nvis);
@@ -100,14 +100,14 @@ function canvasTable(nvis) {      // drawing table on canvas
     ctx.beginPath();
     ctx.moveTo(margL, margT+rowH*i);
     ctx.lineTo(margL+cols*colW, margT+rowH*i);
-    ctx.strokeStyle="green"; 
+    ctx.strokeStyle="lightgray"; 
     ctx.stroke();
   } 
   for(i=0; i<(cols+1); i++) { // Draw vertical grid lines
     ctx.beginPath();
     ctx.moveTo(margL+i*colW, margT);
     ctx.lineTo(margL+i*colW, margT+rows*rowH);
-    ctx.strokeStyle="green"; 
+    ctx.strokeStyle="lightgray"; 
     ctx.stroke();
   }
   // Draw header row
@@ -173,6 +173,7 @@ function canvasTable(nvis) {      // drawing table on canvas
   ctx.fillText("N is noise power at receive location in dBm units, for BW=3kHz.", 1, y); y+=25;
   ctx.fillText("Snr is ratio of signal S and noise N in dB units.", 1, y); y+=25;
   ctx.fillText("SnrM/D/N are Snr levels for midday/day/night.", 1, y); y+=25;
+  ctx.fillStyle="red"; 
   ctx.fillText("Signal must overcome noise, in order to be received.", 1, y); y+=25;
   ctx.fillText("Minimum SNR is 10 dB for SSB voice, and 6 dB for data.", 1, y); y+=25;
 }
@@ -289,21 +290,26 @@ function canvasSNR(nvis) {    // drawing SNR on canvas
   }
   ctx.strokeStyle = "blue"; ctx.stroke();
   ctx.fillStyle="blue"; ctx.fillText("Night", xMin+140, yMin+25);
-  // Add text bellow y=550
+  // Add text bellow plot
   ctx.fillStyle="blue";      y=yMax+50;  
-  ctx.fillText("Graph shows SNR levels for midday, day and night.", 1, y); y+=30;
-  ctx.fillText("SNR is ratio of signal S and noise N in decibel (dB) units.", 1, y); y+=30;
   ctx.fillText("Graph shows SNR levels for midday, day and night.", 1, y); y+=30;
   ctx.fillText("SNR is ratio of signal S and noise N in decibel (dB) units.", 1, y); y+=30;
   ctx.fillText("Signal must overcome noise, in order to be received.", 1, y); y+=30;
   ctx.fillText("Minimum SNR is 10 dB for SSB voice, and 6 dB for data.", 1, y); y+=30;
+  ctx.fillText("Better antenna and more power can improve SNR.", 1, y); y+=30;
   ctx.fillStyle = "red";
-  ctx.fillText("Shorter distances use low frequency and high elevation angles.", 1, y); y+=30;
-  ctx.fillText("Longer distances use high frequency and low elevation angles.", 1, y); y+=30;
-  ctx.fillStyle = "blue";
-  ctx.fillText("Good NVIS frequencies are 4-8 MHz for day, and 2-4 MHz for night.", 1, y); y+=30;
-  ctx.fillText("Good long range frequencies are 10-30 MHz for day, and 6-14 MHz for night.", 1, y); y+=30;
-
+  ctx.fillText("Using Frequency of Optimal Transmission (FOT) is the single most important factor.", 1, y); y+=30;
+  ctx.fillText("Ionosphere changes all the time, and optimal frequencies also change.", 1, y); y+=30;
+  ctx.fillText("Critical frequencies raise during day (say 10 MHz), and drop during night (say 2 MHz).", 1, y); y+=30;
+  ctx.fillText("For daytime only link we may need only one frequency.", 1, y); y+=30;
+  ctx.fillText("For day and night link we will need at least two frequencies.", 1, y); y+=30;
+  ctx.fillStyle = "green";
+  ctx.fillText("Some very common mistakes are:", 1, y); y+=30;  
+  ctx.fillText("1. Using too high frequency for links under 500 km.", 1, y); y+=30;
+  ctx.fillText("         This creates skip zone without coverage, and we can link only over 1000 km and more.", 1, y); y+=30;
+  ctx.fillText("2. Using single frequency antenna (say AS-F104) for 3G.", 1, y); y+=30;
+  ctx.fillText("         3G can not find optimal frequency, it is stuck unless antenna is retuned.", 1, y); y+=30;
+  ctx.fillText("         Ionosphere keeps changing, and link keeps fading in and out.", 1, y); y+=30;
 }
 
 function canvasSkip(nvis) {    // drawing skip on canvas
@@ -454,12 +460,14 @@ function canvasSkip(nvis) {    // drawing skip on canvas
   ctx.fillText("If we use frequency below critical foF2, there will be no skip zone.", 1, y); y+=30;
   ctx.fillText("Using frequency over critical creates skip zone.", 1, y); y+=30;
   ctx.fillText("Increasing frequency grows the skip zone (up to 5,000 km).", 1, y); y+=30; 
-  ctx.fillText("Too high frequency will not reflect from Ionosphere.", 1, y); y+=30; 
-  ctx.fillStyle="blue";  
-  ctx.fillText("Good NVIS freqs are 2-4 MHz during night, and 4-8 MHz during day.", 1, y); y+=30;  
-  ctx.fillText("Skip zone is big problem for NVIS use, but OK for SkyWave.", 1, y); y+=30;   
-  ctx.fillText("Frequencies above 10 MHz are used for long distance (1,000 to 30,000 km).", 1, y); y+=30;  
-  ctx.fillText("In this case skip zone is not a problem.", 1, y); y+=30;  
+  ctx.fillText("Too high frequency will not reflect from Ionosphere.", 1, y); y+=50; 
+  ctx.fillStyle="green";  
+  ctx.fillText("Example: day and night link with distances 1,200 to 3,000 km.", 1, y); y+=30;  
+  ctx.fillText("Skip zone must stay under 1,200 km, and this limits frequency.", 1, y); y+=30;  
+  ctx.fillText("MUF is 17 MHz for Midday, 11 MHz for day and 5 MHz for night .", 1, y); y+=30; 
+  ctx.fillText("Using multiband antenna enables 3G to keep link at optimal frequency.", 1, y); y+=30;   
+  ctx.fillText("20 W and CASG-A1 antenna gives adequate cover up to 3,000 km.", 1, y); y+=30;  
+  ctx.fillText("Using 150 W is recommended in noisy environment.", 1, y); y+=30;  
 }
 
 function canvasSlm(nvis) {    // drawing Secant law multiplier
@@ -569,22 +577,23 @@ function canvasSlm(nvis) {    // drawing Secant law multiplier
   ctx.fillStyle="blue";      y=yMax+50; 
   ctx.fillText("Graph shows Secant Law Multiplier, dependant on elevation angle [0 is horizon].", 1, y); y+=30;
   ctx.fillText("Secant Law Multiplier (SLM) multiples critical frequency by factor of 1 to 5.", 1, y); y+=30;
-  ctx.fillText("Critical frequency (fc) is the highest frequency Ionosphere will reflect back.", 1, y); y+=30;
-  ctx.fillText("Frequencies above critical will pass through Ionosphere without reflection.", 1, y); y+=30;
+  ctx.fillText("Maximum Usable Frequency (MUF) is the highest frequency Ionosphere will reflect back.", 1, y); y+=30;
+  ctx.fillText("Frequencies above MUF will pass through Ionosphere without reflection.", 1, y); y+=30;
   ctx.fillStyle = "red";
-  ctx.fillText("Waves at lower elevation angles will have higher critical frequency fc.", 1, y); y+=30;
+  ctx.fillText("Waves at lower elevation angles will have higher MUF.", 1, y); y+=30;
   //ctx.fillText("This relationship is called Secant Law :", 1, y); y+=30;
-  ctx.fillText("Secant Law:  fc = foF2 * sec (B)", 50, y); y+=30;
-  ctx.fillText("- fc is critical frequency for layer F2 at vertical wave incidence.", 100, y); y+=30;
+  ctx.fillText("Secant Law:  MUF = foF2 * sec (B)", 50, y); y+=30;
   ctx.fillText("- foF2 is critical frequency for layer F2 at vertical wave incidence.", 100, y); y+=30;
   ctx.fillText("- B is wave ange of incidence into F2 layer.", 100, y); y+=30;
   ctx.fillText("- SLM is expression used for sec(B)", 100, y); y+=50;
   ctx.fillStyle="green";
   ctx.fillText("Example:     hF2=300 km,      distance=3,000 km,    foF2=4.0 MHz", 1, y); y+=34; 
-  ctx.fillText("Wave is sent at elevation angle El=4.2"+'\xB0'+" (close to horizon)", 1, y); y+=30; 
+  ctx.fillText("Single hop wave elevation angle El=4.2"+'\xB0'+" (close to horizon)", 1, y); y+=30; 
   ctx.fillText("300 km above ground wave enters F2 layer at angle B=72.3"+'\xB0', 1, y); y+=30;   
-  ctx.fillText("SLM = sec(72.3"+'\xB0'+ ")= 3.28   =>    fc = 3.28 * 4 = 13.08 MHz", 1, y); y+=30; 
+  ctx.fillText("SLM = sec(72.3"+'\xB0'+ ")= 3.28   =>    MUF = 3.28 * 4 = 13.12 MHz", 1, y); y+=30; 
+  ctx.fillText("We are using frequency 3.28 times higher than foF2 !", 1, y); y+=30; 
   ctx.fillText("Reflected wave will return to Earth at 3,000 km distance", 1, y); y+=30; 
+  
 }
 
 
