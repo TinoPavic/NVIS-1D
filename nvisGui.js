@@ -297,13 +297,13 @@ function canvasSNR(nvis) {    // drawing SNR on canvas
   ctx.fillText("Signal must overcome noise, in order to be received.", 1, y); y+=30;
   ctx.fillText("Minimum SNR is 10 dB for SSB voice, and 6 dB for data.", 1, y); y+=30;
   ctx.fillText("Better antenna and more power can improve SNR.", 1, y); y+=30;
-  ctx.fillStyle = "red";
+  ctx.font="bold 20px arial"; ctx.fillStyle = "red";
   ctx.fillText("Using Frequency of Optimal Transmission (FOT) is the single most important factor.", 1, y); y+=30;
   ctx.fillText("Ionosphere changes all the time, and optimal frequencies also change.", 1, y); y+=30;
   ctx.fillText("Critical frequencies raise during day (say 10 MHz), and drop during night (say 2 MHz).", 1, y); y+=30;
   ctx.fillText("For daytime only link we may need only one frequency.", 1, y); y+=30;
   ctx.fillText("For day and night link we will need at least two frequencies.", 1, y); y+=30;
-  ctx.fillStyle = "green";
+  ctx.font="italic 20px arial"; ctx.fillStyle = "green";
   ctx.fillText("Some very common mistakes are:", 1, y); y+=30;  
   ctx.fillText("1. Using too high frequency for links under 500 km.", 1, y); y+=30;
   ctx.fillText("         This creates skip zone without coverage, and we can link only over 1000 km and more.", 1, y); y+=30;
@@ -455,13 +455,13 @@ function canvasSkip(nvis) {    // drawing skip on canvas
   ctx.fillStyle="blue";      y=yMax+50;
   ctx.fillText("Graph shows skip zone for day, midday and night.", 1, y); y+=30;
   ctx.fillText("Skip zone is zone around transmiter without signal coverage.", 1, y); y+=30;
-  ctx.fillText("It's shape is circle with diameter from 0 to 5,000 km.", 1, y); y+=30;
-  ctx.fillStyle="red"; 
+  ctx.fillText("It's shape is circle with diameter from 0 to 5,000 km.", 1, y); y+=50;
+  ctx.font="bold 20px arial";  ctx.fillStyle="red"; 
   ctx.fillText("If we use frequency below critical foF2, there will be no skip zone.", 1, y); y+=30;
   ctx.fillText("Using frequency over critical creates skip zone.", 1, y); y+=30;
   ctx.fillText("Increasing frequency grows the skip zone (up to 5,000 km).", 1, y); y+=30; 
   ctx.fillText("Too high frequency will not reflect from Ionosphere.", 1, y); y+=50; 
-  ctx.fillStyle="green";  
+  ctx.font="italic 20px arial"; ctx.fillStyle="green";  
   ctx.fillText("Example: day and night link with distances 1,200 to 3,000 km.", 1, y); y+=30;  
   ctx.fillText("Skip zone must stay under 1,200 km, and this limits frequency.", 1, y); y+=30;  
   ctx.fillText("MUF is 17 MHz for Midday, 11 MHz for day and 5 MHz for night .", 1, y); y+=30; 
@@ -575,25 +575,23 @@ function canvasSlm(nvis) {    // drawing Secant law multiplier
   ctx.fillStyle="green"; ctx.fillText("B", xMax+5, yMin+25);
   // Add text bellow plot
   ctx.fillStyle="blue";      y=yMax+50; 
-  ctx.fillText("Graph shows Secant Law Multiplier, dependant on elevation angle [0 is horizon].", 1, y); y+=30;
-  ctx.fillText("Secant Law Multiplier (SLM) multiples critical frequency by factor of 1 to 5.", 1, y); y+=30;
+  ctx.fillText("Graph shows Secant Law Multiplier (SLM) versus elevation angle Elev [0 is horizon].", 1, y); y+=30;
   ctx.fillText("Maximum Usable Frequency (MUF) is the highest frequency Ionosphere will reflect back.", 1, y); y+=30;
   ctx.fillText("Frequencies above MUF will pass through Ionosphere without reflection.", 1, y); y+=30;
-  ctx.fillStyle = "red";
-  ctx.fillText("Waves at lower elevation angles will have higher MUF.", 1, y); y+=30;
-  //ctx.fillText("This relationship is called Secant Law :", 1, y); y+=30;
+  ctx.fillStyle = "red";  ctx.font="bold 20px arial";
+  ctx.fillText("Waves using lower elevation angles will have higher MUF.", 1, y); y+=30;
   ctx.fillText("Secant Law:  MUF = foF2 * sec (B)", 50, y); y+=30;
   ctx.fillText("- foF2 is critical frequency for layer F2 at vertical wave incidence.", 100, y); y+=30;
   ctx.fillText("- B is wave ange of incidence into F2 layer.", 100, y); y+=30;
-  ctx.fillText("- SLM is expression used for sec(B)", 100, y); y+=50;
-  ctx.fillStyle="green";
+  ctx.fillText("- SLM is expression used for sec(B)", 100, y); y+=30;
+  ctx.fillText("Secant Law Multiplier (SLM) multiples critical frequency by factor of 1 to 5.", 1, y); y+=50;
+  ctx.fillStyle="green";  ctx.font="italic 20px arial";
   ctx.fillText("Example:     hF2=300 km,      distance=3,000 km,    foF2=4.0 MHz", 1, y); y+=34; 
   ctx.fillText("Single hop wave elevation angle El=4.2"+'\xB0'+" (close to horizon)", 1, y); y+=30; 
   ctx.fillText("300 km above ground wave enters F2 layer at angle B=72.3"+'\xB0', 1, y); y+=30;   
   ctx.fillText("SLM = sec(72.3"+'\xB0'+ ")= 3.28   =>    MUF = 3.28 * 4 = 13.12 MHz", 1, y); y+=30; 
   ctx.fillText("We are using frequency 3.28 times higher than foF2 !", 1, y); y+=30; 
-  ctx.fillText("Reflected wave will return to Earth at 3,000 km distance", 1, y); y+=30; 
-  
+  ctx.fillText("Reflected wave will return to Earth at 3,000 km distance", 1, y); y+=30;     
 }
 
 
