@@ -170,7 +170,7 @@ function latestfoF2(nvis) {  // current foF2 min max from Ionosondes
   if(t>-15) {f1=2.2; f3=10.5; } // Darwin
   f2 = (f1+f3)/2;// adjust f2
   // Mix with prediction
-  var ye=2022, mo=7, da=9;   // date when Ionosonde adjusted  
+  var ye=2022, mo=7, da=20;   // date when Ionosonde adjusted  
   var d1 = ye*365 + mo*30.5 + da;
   var d2 = nvis.year*365 + nvis.month*30.5 + 15; // adjustment age in days
   var me=(d2-d1)/90; me=Math.abs(me); // mix factor
