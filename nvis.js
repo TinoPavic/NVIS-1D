@@ -159,18 +159,18 @@ function calcfoF2(nvis) {  // foF2 daily minimum   min 2.0, lat+0.5, fold at S 2
 
 function latestfoF2(nvis) {  // current foF2 min max from Ionosondes
   var t=nvis.lat;
-  var f1=3.0, f3=9.0;          // Mawson Station, Antarctica   
-  if(t>-50) {f1=2.2; f3=8.3; } // Hobart
-  if(t>-40) {f1=2.8; f3=10.3; } // Learmonth, Vic
-  if(t>-36) {f1=3.0; f3=7.9; } // Canberra
+  var f1=3.0, f3=7.7;          // Mawson Station, Antarctica   
+  if(t>-50) {f1=2.5; f3=8.2; } // Hobart
+  if(t>-40) {f1=2.9; f3=11.3; } // Learmonth, Vic
+  if(t>-36) {f1=2.4; f3=8.5; } // Canberra
   if(t>-34.5) {f1=3.1; f3=8.3; } // Camden, Sydney
-  if(t>-32.5) {f1=2.6; f3=8.8; } // Perth
-  if(t>-31) {f1=3.5; f3=9.5; } // Brisbane
-  if(t>-23) {f1=2.5; f3=12.0; } // Townsville
-  if(t>-15) {f1=1.9; f3=12.4; } // Darwin
+  if(t>-32.5) {f1=2.9; f3=9.4; } // Perth
+  if(t>-31) {f1=3.6; f3=9.9; } // Brisbane
+  if(t>-23) {f1=3.2; f3=12.4; } // Townsville
+  if(t>-15) {f1=2.6; f3=14.2; } // Darwin
   f2 = (f1+f3)/2;// adjust f2
   // Mix with prediction
-  var ye=2022, mo=8, da=21;   // date when Ionosonde adjusted  
+  var ye=2022, mo=9, da=12;   // date when Ionosonde adjusted  
   var d1 = ye*365 + mo*30.5 + da;
   var d2 = nvis.year*365 + nvis.month*30.5 + 15; // adjustment age in days
   var me=(d2-d1)/90; me=Math.abs(me); // mix factor
