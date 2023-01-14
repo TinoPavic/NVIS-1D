@@ -188,7 +188,7 @@ function canvasSNR(nvis) {    // drawing SNR on canvas
   // Work out grid dimensions
   var i, rows=12, cols=15;            //Grid with 12 rows and 15 columns
   var margL=50, margR=20, margT=30, margB=500;  //Margins - left, right, top,botom,
-  var xDiv=2, yDiv=5;
+  var xDiv=2, yDiv=6;
   var rowH = Math.round(( nvis.canH - margT- margB )/rows); rowH -= 1;
   var colW = Math.round((nvis.canW-margL-margR)/cols);   colW -= 1;
   var xMin,xMax, yMin,yMax;         // grid min max coordinates
@@ -228,12 +228,12 @@ function canvasSNR(nvis) {    // drawing SNR on canvas
   // Mark y axes
   x = margL - 25;   y = yMax - rowH +5;
   for(i=1; i<rows; i++) { 
-    s = yDiv*i;
+    s = yDiv*i - 12;
     ctx.fillText(s, x, y);
     y -= rowH;
   }
   // Draw plot title 
-  s3="Signal to noise ratio (SNR) 10 dB/div";  
+  s3="Signal to noise ratio (SNR) 6 dB/div";  
   ctx.fillText(s3, nvis.canW/2, margT+25);
   // Plot SNR data
   ctx.lineWidth=2;
@@ -243,9 +243,9 @@ function canvasSNR(nvis) {    // drawing SNR on canvas
   ctx.moveTo(x, yMax);
   for ( i=0; i<58; i++) {   
     sg = nvis.snrM[i];
-    if(sg<0.0)  sg=0.0;
-    if(sg>60)   sg=60;
-    y = sg * rowH / yDiv;  
+    if(sg < -12.0)  sg=-12.0;
+    if(sg > 60)     sg=60;
+    y = sg * rowH / yDiv + 2*rowH;  
     y=Math.round(yMax-y);
     x = fr * colW / xDiv;  
     x=Math.round(xMin+x);
@@ -261,9 +261,9 @@ function canvasSNR(nvis) {    // drawing SNR on canvas
   ctx.moveTo(x, yMax);
   for ( i=0; i<58; i++) {   
     sg = nvis.snrD[i];
-    if(sg<0.0)  sg=0.0;
+    if(sg<-12.0)  sg=-12.0;
     if(sg>60)   sg=60;
-    y = sg * rowH / yDiv;  
+    y = sg * rowH / yDiv + 2*rowH;  
     y=Math.round(yMax-y);
     x = fr * colW / xDiv;  
     x=Math.round(xMin+x);
@@ -279,9 +279,9 @@ function canvasSNR(nvis) {    // drawing SNR on canvas
   ctx.moveTo(x, yMax);
   for ( i=0; i<58; i++) {   
     sg = nvis.snrN[i];
-    if(sg<0.0)  sg=0.0;
+    if(sg<-12.0)  sg=-12.0;
     if(sg>60)   sg=60;
-    y = sg * rowH / yDiv;  
+    y = sg * rowH / yDiv + 2*rowH;  
     y=Math.round(yMax-y);
     x = fr * colW / xDiv;  
     x=Math.round(xMin+x);
