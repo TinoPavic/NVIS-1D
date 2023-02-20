@@ -115,7 +115,7 @@ function canvasTable(nvis) {      // drawing table on canvas
   if(rowH<30  ||  colW<70) ctx.font = "20px Arial"; 
   ctx.fillStyle="blue";    ;// select font 
   x=margL+10; y=margT+25;
-  s3=["f","Eirp","Grx","Fspl", "Drap","Lt","N","SnrM","SnrD","SnrN"];   
+  s3=["f","Eirp","Grx","Lfs", "Ld","Lt","N","SnrM","SnrD","SnrN"];   
   for(i=0;i<cols; i++) { ctx.fillText(s3[i], x, y); x+=colW;};
   // Draw data in table cells
   ctx.fillStyle= "black";
@@ -167,15 +167,15 @@ function canvasTable(nvis) {      // drawing table on canvas
   y=margT+rowH*rows+30;     // position
   ctx.fillStyle="blue";      ctx.font = "20px Arial";        // font select
   ctx.fillText("Eirp is transmitted signal power at origin in dBm units.", 1, y); y+=25;
-  ctx.fillText("Fspl is signal loss over signal path in dB units (daily maximum).", 1, y); y+=25;
-  ctx.fillText("Drap is signal loss in D layer in dB (daily maximum).", 1, y); y+=25;
+  ctx.fillText("Lfs is signal loss over signal path in dB units (daily maximum).", 1, y); y+=25;
+  ctx.fillText("Ld (DRAP) is signal loss in D layer in dB (daily maximum).", 1, y); y+=25;
   ctx.fillText("Lt is total signal loss(Fspl+Drap) in dB (daily maximum).", 1, y); y+=25;
   ctx.fillText("N is noise power at receive location in dBm units, for BW=3kHz.", 1, y); y+=25;
   ctx.fillText("Snr is ratio of signal S and noise N in dB units.", 1, y); y+=25;
   ctx.fillText("SnrM/D/N are Snr levels for midday/day/night.", 1, y); y+=25;
   ctx.fillStyle="red"; 
   ctx.fillText("Signal must overcome noise, in order to be received.", 1, y); y+=25;
-  ctx.fillText("Minimum SNR is 10 dB for SSB voice, and 6 dB for data.", 1, y); y+=25;
+  ctx.fillText("Minimum SNR is 10 dB for SSB voice, and -20 dB for data.", 1, y); y+=25;
 }
 
 function canvasSNR(nvis) {    // drawing SNR on canvas
@@ -534,9 +534,12 @@ function canvasSlm(nvis) {    // drawing Secant law multiplier
     y -= rowH;
   }
   // Draw plot title 
-  ctx.fillStyle="black";
+  ctx.fillStyle="red";
   s3="Secant Law Multiplier (SLM) 0.5 / div";  
-  ctx.fillText(s3, nvis.canW/2, yMin+25);    
+  ctx.fillText(s3, nvis.canW/2, yMin+25);  
+  ctx.fillStyle="green";
+  s3="F2 layer incidence angle 10"+'\xB0'+ "/ div";  
+  ctx.fillText(s3, nvis.canW/2, yMin+55);     
   // Plot SLM
   var el, B, skslm;
   ctx.lineWidth=2;
